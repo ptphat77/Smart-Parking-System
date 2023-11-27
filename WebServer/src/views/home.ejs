@@ -1,17 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="css/style.css">
-    <title>Smart Parking System</title>
-</head>
-<body>
-    <div class="container">
-        <div class="slot__container">
-            <div class="row">
-                <div class="slot__item col bg-success">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+            crossorigin="anonymous"
+        />
+        <link rel="stylesheet" href="css/style.css" />
+        <title>Smart Parking System</title>
+    </head>
+    <body>
+        <div class="container">
+            <div class="slot__container">
+                <div class="row">
+                    <% slotList.forEach(function(slot, index){ %>
+                    <div class="slot__item col <%= getBgColor(slot.isBlank) %>">
+                        <b>Slot <%= slot.slotNumber %></b>
+                    </div>
+                    <% }) %>
+
+                    <!-- <div class="slot__item col bg-success">
                     <b>Slot 1</b>
                 </div>
                 <div class="slot__item col bg-danger">
@@ -19,9 +30,9 @@
                 </div>
                 <div class="slot__item col bg-success">
                     <b>Slot 3</b>
+                </div> -->
                 </div>
-              </div>
+            </div>
         </div>
-    </div>
-</body>
+    </body>
 </html>
