@@ -19,13 +19,12 @@ HTTPClient http;
 
 // Sensor data
 const size_t dataArrSize = 3;
-int dataArr[dataArrSize] = {1, 1, 1};
+int dataArr[dataArrSize] = {1, 0, 1};
+
+int preDataArr[dataArrSize] = {-1, -1, -1};
 
 void setup()
 {
-    Serial.begin(9600);
-
-    delay(3000);
     Serial.begin(9600);
     WiFi.begin(ssid, password);
     while (WiFi.status() != WL_CONNECTED)
@@ -34,7 +33,7 @@ void setup()
         Serial.print(".");
     }
     Serial.println("WiFi connected");
-    delay(1000);
+    delay(3000);
 }
 
 void getSensorData()
@@ -51,6 +50,12 @@ void getSensorData()
 
 void sendData()
 {
+    if (!memcmp(preDataArr, dataArr, dataArrSize))
+    {
+        return;
+    }
+
+    memcpy(preDataArr, dataArr, dataArrSize);
 
     iotData["errorCode"] = 0;
     for (size_t i = 0; i < dataArrSize; i++)
@@ -79,6 +84,7 @@ void sendData()
         Serial.printf("\n[HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
     }
     http.end();
+    return;
 }
 
 void loop()
