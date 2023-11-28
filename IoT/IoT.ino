@@ -57,7 +57,7 @@ void sendData()
 
     memcpy(preDataArr, dataArr, dataArrSize);
 
-    iotData["errorCode"] = 0;
+    iotData["errorCode"] = 1;
     for (size_t i = 0; i < dataArrSize; i++)
     {
         sensorData[i] = dataArr[i];
@@ -77,6 +77,10 @@ void sendData()
         if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY)
         {
             Serial.print("\nResponse: Success!");
+        }
+        else
+        {
+            Serial.print("\nResponse: Failed!");
         }
     }
     else
