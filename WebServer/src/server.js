@@ -12,7 +12,7 @@ db.connect();
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
+export const io = new Server(server);
 const port = 3000;
 
 // Config view engine
@@ -38,5 +38,3 @@ route(app);
 server.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`);
 });
-
-export default io;

@@ -1,11 +1,11 @@
 const slotService = require('../services/slotService');
-const io = require('../server');
+import { io } from '../server';
 
 const updateFunc = async (req, res) => {
     if (req.body.errorCode == 0) {
         await slotService.updateSlotBlank(req.body.data);
         console.log(req.body.data);
-        io.default.emit('message', 'tin nhan');
+        io.emit('message', 'broadcast');
 
         return res.status(200).json({ message: 'Success!!!' });
     } else {
