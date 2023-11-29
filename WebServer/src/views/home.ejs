@@ -15,24 +15,31 @@
     <body>
         <div class="container">
             <div class="slot__container">
-                <div class="row">
-                    <% slotList.forEach(function(slot, index){ %>
-                    <div class="slot__item col <%= getBgColor(slot.isBlank) %>">
-                        <b>Slot <%= slot.slotNumber %></b>
-                    </div>
-                    <% }) %>
-
-                    <!-- <div class="slot__item col bg-success">
-                    <b>Slot 1</b>
-                </div>
-                <div class="slot__item col bg-danger">
-                    <b>Slot 2</b>
-                </div>
-                <div class="slot__item col bg-success">
-                    <b>Slot 3</b>
-                </div> -->
-                </div>
+                <div class="row"></div>
             </div>
         </div>
+        <script>
+            function fetchSlotList() {
+                fetch('http://localhost:3000/iot')
+                    .then((resoponse) => {
+                        return resoponse.json();
+                    })
+                    .then((slotList) => {
+                        const slotContainer = document.querySelector('.slot__container .row');
+
+                        var htmls = slotList.map(function (slot) {
+                            const BgColor = slot.isBlank ? 'bg-success' : 'bg-danger';
+                            return `<div class="slot__item col ${BgColor}">
+                                <b>Slot ${slot.slotNumber}</b>
+                            </div>`;
+                        });
+
+                        slotContainer.innerHTML = htmls.join('');
+                    });
+            }
+            document.addEventListener('DOMContentLoaded', function () {
+                fetchSlotList();
+            });
+        </script>
     </body>
 </html>

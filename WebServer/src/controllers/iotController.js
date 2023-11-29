@@ -1,6 +1,6 @@
 const slotService = require('../services/slotService');
 
-const getDataIoT = async (req, res) => {
+const updateFunc = async (req, res) => {
     if (req.body.errorCode == 0) {
         await slotService.updateSlotList(req.body.data);
         console.log(req.body.data);
@@ -10,6 +10,12 @@ const getDataIoT = async (req, res) => {
     }
 };
 
+const readFunc = async (req, res) => {
+    let slotList = await slotService.getSlotList();
+    return res.status(200).json(slotList);
+};
+
 module.exports = {
-    getDataIoT,
+    updateFunc,
+    readFunc,
 };
