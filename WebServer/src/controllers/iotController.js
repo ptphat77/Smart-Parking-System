@@ -2,7 +2,7 @@ const slotService = require('../services/slotService');
 
 const updateFunc = async (req, res) => {
     if (req.body.errorCode == 0) {
-        await slotService.updateSlotList(req.body.data);
+        await slotService.updateSlotBlank(req.body.data);
         console.log(req.body.data);
         return res.status(200).json({ message: 'Success!!!' });
     } else {

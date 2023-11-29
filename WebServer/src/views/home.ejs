@@ -18,27 +18,85 @@
                 <div class="row"></div>
             </div>
         </div>
+
+        <script src="/socket.io/socket.io.js"></script>
         <script>
-            function fetchSlotList() {
-                fetch('http://localhost:3000/iot')
+            let slotListFE = [];
+
+            const renderSlotList = (slotList) => {
+                const slotContainer = document.querySelector('.slot__container .row');
+
+                var htmls = slotList.map(function (slot) {
+                    const BgColor = slot.isBlank || slot.isBooked ? 'bg-success' : 'bg-danger';
+                    return `<div class="slot__item col ${BgColor}" dataId="${slot.slotNumber}">
+                                <b>Slot ${slot.slotNumber}</b>
+                            </div>`;
+                });
+
+                slotContainer.innerHTML = htmls.join('');
+
+                // Add event listener for slot buttons
+                const socket = io();
+
+                const slotBtns = document.querySelectorAll('.slot__item');
+
+                slotBtns.forEach((slotBtn) => {
+                    slotBtn.addEventListener('click', async (e) => {
+                        const slotNumber = e.target.getAttribute('dataId');
+
+                        slotListFE[slotNumber].isBooked = !slotListFE[slotNumber].isBooked;
+
+                        console.log('slotListFE', slotListFE);
+
+                        await fetch('http://localhost:3000/', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(slotListFE[slotNumber]),
+                        })
+                            .then((response) => {
+                                if (!response.ok) {
+                                    throw new Error('Network response was not ok');
+                                }
+                                return response.json();
+                            })
+                            .then((data) => {
+                                console.log('Success:', data);
+                            })
+                            .catch((error) => {
+                                console.error('Error:', error);
+                            });
+
+                        // Broadcast socket io
+                        socket.emit('user-message', 'broadcast');
+                    });
+                });
+            };
+
+            const fetchSlotList = async () => {
+                await fetch('http://localhost:3000/iot/')
                     .then((resoponse) => {
                         return resoponse.json();
                     })
                     .then((slotList) => {
-                        const slotContainer = document.querySelector('.slot__container .row');
-
-                        var htmls = slotList.map(function (slot) {
-                            const BgColor = slot.isBlank ? 'bg-success' : 'bg-danger';
-                            return `<div class="slot__item col ${BgColor}">
-                                <b>Slot ${slot.slotNumber}</b>
-                            </div>`;
-                        });
-
-                        slotContainer.innerHTML = htmls.join('');
+                        console.log('slotList', slotList);
+                        renderSlotList(slotList);
+                        slotListFE = slotList;
                     });
-            }
-            document.addEventListener('DOMContentLoaded', function () {
-                fetchSlotList();
+            };
+
+            window.addEventListener('load', async () => {
+                await fetchSlotList();
+
+                // Socket.io
+
+                const socket = io();
+
+                socket.on('message', async (message) => {
+                    console.log('Broadcast success!!!');
+                    await fetchSlotList();
+                });
             });
         </script>
     </body>

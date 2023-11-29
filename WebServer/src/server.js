@@ -1,5 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const http = require('http');
+const { Server } = require('socket.io');
 
 const route = require('./routes');
 const viewEngine = require('./config/viewEngine');
@@ -9,6 +11,8 @@ const db = require('./config/db');
 db.connect();
 
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server);
 const port = 3000;
 
 // Config view engine
@@ -22,8 +26,15 @@ app.locals.getBgColor = (isBlankSlot) => {
     return isBlankSlot ? 'bg-success' : 'bg-danger';
 };
 
+// Socket.io
+io.on('connection', (socket) => {
+    socket.on('user-message', (message) => {
+        io.emit('message', message);
+    });
+});
+
 route(app);
 
-app.listen(port, () => {
+server.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`);
 });

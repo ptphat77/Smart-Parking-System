@@ -9,7 +9,7 @@ const getSlotList = async () => {
     }
 };
 
-const updateSlotList = async (sensorData) => {
+const updateSlotBlank = async (sensorData) => {
     try {
         for (let [index, value] of sensorData.entries()) {
             await Slot.updateOne({ slotNumber: index }, { isBlank: value });
@@ -19,7 +19,19 @@ const updateSlotList = async (sensorData) => {
     }
 };
 
+const updateSlotBooked = async (slotBooked) => {
+    console.log('slotBooked: ', slotBooked);
+
+    console.log('slotBooked service: ', slotBooked.slotNumber);
+    try {
+        await Slot.updateOne({ slotNumber: slotBooked.slotNumber }, { isBlank: slotBooked.isBooked });
+    } catch (error) {
+        console.log('>>> check error:', error);
+    }
+};
+
 module.exports = {
     getSlotList,
-    updateSlotList,
+    updateSlotBlank,
+    updateSlotBooked,
 };
