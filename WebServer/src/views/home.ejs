@@ -27,7 +27,7 @@
                 const slotContainer = document.querySelector('.slot__container .row');
 
                 var htmls = slotList.map(function (slot) {
-                    const BgColor = slot.isBlank || slot.isBooked ? 'bg-success' : 'bg-danger';
+                    const BgColor = slot.isBlank || slot.isBooked ? 'bg-danger' : 'bg-success';
                     return `<div class="slot__item col ${BgColor}" dataId="${slot.slotNumber}">
                                 <b>Slot ${slot.slotNumber}</b>
                             </div>`;
