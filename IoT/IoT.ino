@@ -19,12 +19,16 @@ HTTPClient http;
 
 // Sensor data
 const size_t dataArrSize = 3;
-int dataArr[dataArrSize] = {1, 0, 1};
+int IRsensor[dataArrSize] = {D2,D3,D4}; //Vị trí các chân nhận tín hiệu IR sensor
 
+int dataArr[dataArrSize] = {1, 0, 1}, check;
 int preDataArr[dataArrSize] = {-1, -1, -1};
 
 void setup()
 {
+    for (size_t i = 0; i < dataArrSize; i++)
+        pinMode(IRsensor[i],INPUT);
+
     Serial.begin(9600);
     WiFi.begin(ssid, password);
     while (WiFi.status() != WL_CONNECTED)
@@ -38,24 +42,25 @@ void setup()
 
 void getSensorData()
 {
-//    for (size_t i = 0; i < dataArrSize; i++)
-//    {
-//        check = digitalRead(IRsensor[i]); // Đọc tín hiệu từng IRsensor
-//        if (check != 0 && check != 1)
-//            dataArr[i] = 2;
-//        else
-//            dataArr[i] = check;
-//    }
+    for (size_t i = 0; i < dataArrSize; i++)
+    {
+        //0 là có vật cản, 1 là K có vật cản.
+        check = digitalRead(IRsensor[i]); // Đọc tín hiệu từng IRsensor
+        if (check != 0 && check != 1)
+            dataArr[i] = 2;
+        else
+            dataArr[i] = check;
+    }
 }
 
 void sendData()
 {
-//    if (!memcmp(preDataArr, dataArr, dataArrSize))
-//    {
-//        return;
-//    }
-//
-//    memcpy(preDataArr, dataArr, dataArrSize);
+    if (!memcmp(preDataArr, dataArr, dataArrSize))
+    {
+        return;
+    }
+
+    memcpy(preDataArr, dataArr, dataArrSize);
 
     iotData["errorCode"] = 0;
     for (size_t i = 0; i < dataArrSize; i++)
@@ -97,5 +102,5 @@ void loop()
 
     sendData();
 
-    delay(3000);
+    delay(500);
 }
