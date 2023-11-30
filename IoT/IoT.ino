@@ -3,9 +3,9 @@
 #include <ESP8266HTTPClient.h>
 #include <ArduinoJson.h>
 
-const char *ssid = "CT";                                   // Enter your WIFI ssid
-const char *password = "camtu1974";                        // Enter your WIFI password
-const char *server_url = "http://192.168.0.104:3000/iot/"; // Nodejs application endpoint
+const char *ssid = "UIT Public";                                   // Enter your WIFI ssid
+const char *password = "";                        // Enter your WIFI password
+const char *server_url = "http://10.45.50.231:3000/iot/"; // Nodejs application endpoint
 
 StaticJsonDocument<2048> iotData;
 JsonArray sensorData = iotData.createNestedArray("data");
@@ -38,26 +38,26 @@ void setup()
 
 void getSensorData()
 {
-    for (size_t i = 0; i < dataArrSize; i++)
-    {
-        check = digitalRead(IRsensor[i]); // Đọc tín hiệu từng IRsensor
-        if (check != 0 && check != 1)
-            dataArr[i] = 2;
-        else
-            dataArr[i] = check;
-    }
+//    for (size_t i = 0; i < dataArrSize; i++)
+//    {
+//        check = digitalRead(IRsensor[i]); // Đọc tín hiệu từng IRsensor
+//        if (check != 0 && check != 1)
+//            dataArr[i] = 2;
+//        else
+//            dataArr[i] = check;
+//    }
 }
 
 void sendData()
 {
-    if (!memcmp(preDataArr, dataArr, dataArrSize))
-    {
-        return;
-    }
+//    if (!memcmp(preDataArr, dataArr, dataArrSize))
+//    {
+//        return;
+//    }
+//
+//    memcpy(preDataArr, dataArr, dataArrSize);
 
-    memcpy(preDataArr, dataArr, dataArrSize);
-
-    iotData["errorCode"] = 1;
+    iotData["errorCode"] = 0;
     for (size_t i = 0; i < dataArrSize; i++)
     {
         sensorData[i] = dataArr[i];
