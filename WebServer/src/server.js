@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const http = require('http');
 const { Server } = require('socket.io');
+require('dotenv').config();
 
 const route = require('./routes');
 const viewEngine = require('./config/viewEngine');
@@ -13,7 +14,7 @@ db.connect();
 const app = express();
 const server = http.createServer(app);
 export const io = new Server(server);
-const port = 3000;
+const port = process.env.PORT;
 
 // Config view engine
 viewEngine.config(app);

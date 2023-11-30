@@ -1,7 +1,8 @@
 const slotService = require('../services/slotService');
 
 const getHomePage = async (req, res) => {
-    return res.render('home');
+    console.log(process.env.URL_SERVER)
+    return res.render('home', { url: process.env.URL_SERVER, port: process.env.PORT });
 };
 
 const bookSlot = async (req, res) => {

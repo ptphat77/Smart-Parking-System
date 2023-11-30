@@ -48,7 +48,7 @@
 
                         console.log('slotListFE', slotListFE);
 
-                        await fetch('http://10.45.50.231:3000/', {
+                        await fetch(`<%= url %>:<%= port %>/`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -75,7 +75,7 @@
             };
 
             const fetchSlotList = async () => {
-                await fetch('http://10.45.50.231:3000/iot/')
+                await fetch(`<%= url %>:<%= port %>/iot/`)
                     .then((resoponse) => {
                         return resoponse.json();
                     })
