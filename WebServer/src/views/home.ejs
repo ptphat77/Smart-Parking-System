@@ -27,20 +27,32 @@
                 const slotContainer = document.querySelector('.slot__container .row');
 
                 var htmls = slotList.map(function (slot) {
-                    const BgColor = !slot.isBlank || slot.isBooked ? 'bg-danger' : 'bg-success';
-                    return `<div class="slot__item col ${BgColor}" dataId="${slot.slotNumber}">
+                    let BgColor = '';
+                    if (slot.isBooked) {
+                        BgColor = 'bg-warning';
+                    } else if (!slot.isBlank) {
+                        BgColor = 'bg-danger';
+                    } else {
+                        // slot.isBlank && !slot.isBooked
+                        BgColor = 'bg-success';
+                    }
+
+                    const Cursor = !slot.isBlank ? '' : 'cursor';
+                    return `<div class="slot__item col ${BgColor} ${Cursor}" dataId="${slot.slotNumber}">
                                 <b>Slot ${slot.slotNumber}</b>
                             </div>`;
                 });
 
                 slotContainer.innerHTML = htmls.join('');
 
-                // Add event listener for slot buttons
-                const socket = io();
-
                 const slotBtns = document.querySelectorAll('.slot__item');
 
                 slotBtns.forEach((slotBtn) => {
+                    // Booking cannot be cancelled when slot is not blank
+                    if (!slotListFE[slotBtn.getAttribute('dataId')].isBlank) {
+                        return;
+                    }
+
                     slotBtn.addEventListener('click', async (e) => {
                         const slotNumber = e.target.getAttribute('dataId');
 
@@ -78,8 +90,8 @@
                     })
                     .then((slotList) => {
                         console.log('slotList', slotList);
-                        renderSlotList(slotList);
                         slotListFE = slotList;
+                        renderSlotList(slotList);
                     });
             };
 

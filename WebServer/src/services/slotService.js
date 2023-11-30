@@ -12,7 +12,11 @@ const getSlotList = async () => {
 const updateSlotBlank = async (sensorData) => {
     try {
         for (let [index, value] of sensorData.entries()) {
-            await Slot.updateOne({ slotNumber: index }, { isBlank: value });
+            if (value) {
+                await Slot.updateOne({ slotNumber: index }, { isBlank: value });
+            } else {
+                await Slot.updateOne({ slotNumber: index }, { isBlank: value, isBooked: false });
+            }
         }
     } catch (error) {
         console.log('>>> check error:', error);
