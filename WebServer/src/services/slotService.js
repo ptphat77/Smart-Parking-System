@@ -24,7 +24,7 @@ const updateSlotBooked = async (slotBooked) => {
 
     console.log('slotBooked service: ', slotBooked.slotNumber);
     try {
-        let response = await Slot.updateOne({ slotNumber: slotBooked.slotNumber }, { isBlank: slotBooked.isBooked });
+        let response = await Slot.updateOne({ slotNumber: slotBooked.slotNumber }, { isBooked: slotBooked.isBooked });
         console.log('response', response);
     } catch (error) {
         console.log('>>> check error:', error);
