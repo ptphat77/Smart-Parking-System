@@ -5,7 +5,7 @@ const updateFunc = async (req, res) => {
     if (req.body.errorCode == 0) {
         await slotService.updateSlotBlank(req.body.data);
         console.log(req.body.data);
-        io.emit('message', 'broadcast');
+        io.emit('fetch slot data', 'Broadcast success!!!');
 
         return res.status(200).json({ message: 'Success!!!' });
     } else {

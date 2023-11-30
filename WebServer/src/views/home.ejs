@@ -67,9 +67,6 @@
                             .catch((error) => {
                                 console.error('Error:', error);
                             });
-
-                        // Broadcast socket io
-                        socket.emit('user-message', 'broadcast');
                     });
                 });
             };
@@ -92,8 +89,8 @@
                 // Socket.io
                 const socket = io();
 
-                socket.on('message', async (message) => {
-                    console.log('Broadcast success!!!');
+                socket.on('fetch slot data', async (message) => {
+                    console.log(message);
                     await fetchSlotList();
                 });
             });

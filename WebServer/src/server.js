@@ -23,17 +23,6 @@ viewEngine.config(app);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.locals.getBgColor = (isBlankSlot) => {
-    return isBlankSlot ? 'bg-success' : 'bg-danger';
-};
-
-// Socket.io
-io.on('connection', (socket) => {
-    socket.on('user-message', (message) => {
-        io.emit('message', message);
-    });
-});
-
 route(app);
 
 server.listen(port, () => {
