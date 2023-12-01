@@ -26,7 +26,6 @@ const updateSlotBlank = async (sensorData) => {
 const updateSlotBooked = async (slotBooked) => {
     try {
         let response = await Slot.updateOne({ slotNumber: slotBooked.slotNumber }, { isBooked: slotBooked.isBooked });
-        console.log('response', response);
     } catch (error) {
         console.log('>>> check error:', error);
     }
