@@ -1,14 +1,9 @@
-const slotService = require('../services/slotService');
+const userService = require('../services/userService');
 
 const createFunc = async (req, res) => {
-    if (req.body.errorCode == 0) {
-        await slotService.updateSlotBlank(req.body.data);
-        io.emit('fetch slot data', 'Broadcast success!!!');
-
-        return res.status(200).json({ message: 'Success!!!' });
-    } else {
-        return res.status(400).json({ message: 'Failed!!!' });
-    }
+    console.log('>>>req, ', req.body);
+    await userService.createUser(req.body);
+    res.redirect('/login');
 };
 
 module.exports = {
