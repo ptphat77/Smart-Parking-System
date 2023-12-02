@@ -1,19 +1,21 @@
 const homeController = require('../controllers/homeController');
 const iotController = require('../controllers/iotController');
-const LoginRegisterController = require('../controllers/loginRegisterController');
+const authController = require('../controllers/authController');
+import { checkUserJWT } from '../middleware/JWTAction';
 
 function route(app) {
-    app.get('/register', LoginRegisterController.showRegister);
-    app.get('/login', LoginRegisterController.showLogin);
+    app.get('/register', authController.getRegister);
+    app.get('/login', authController.getLogin);
+    app.get('/logout', authController.getLogout);
 
-    app.post('/register', LoginRegisterController.handleRegister);
-    app.post('/login', LoginRegisterController.handleLogin);
+    app.post('/register', authController.postRegister);
+    app.post('/login', authController.postLogin);
 
     app.post('/iot', iotController.updateFunc);
     app.get('/iot', iotController.readFunc);
 
-    app.post('/', homeController.bookSlot);
-    app.get('/', homeController.getHomePage);
+    app.post('/',  homeController.bookSlot);
+    app.get('/', checkUserJWT, homeController.getHomePage);
 }
 
 module.exports = route;

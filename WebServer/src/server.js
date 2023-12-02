@@ -2,7 +2,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const http = require('http');
 const { Server } = require('socket.io');
+const session = require('express-session');
 require('dotenv').config();
+const cookieParser = require ('cookie-parser');
 
 const route = require('./routes');
 const viewEngine = require('./config/viewEngine');
@@ -22,6 +24,23 @@ viewEngine.config(app);
 // config body-parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// config cookie-parser
+app.use(cookieParser());
+
+// Config session
+app.use(
+    session({
+        secret: process.env.SESSION_SECRET,
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+            maxAge: 60 * 60 * 1000, // 3 hours
+            httpOnly: true,
+            sameSite: 'strict',
+        },
+    }),
+);
 
 route(app);
 

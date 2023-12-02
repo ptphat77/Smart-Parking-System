@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 
 const User = require('../models/User');
+import { createJWT } from '../middleware/JWTAction';
 
 const salt = bcrypt.genSaltSync(10);
 
@@ -21,10 +22,16 @@ const checkUserLogin = async (rawUserData) => {
 
         if (user) {
             if (checkPassword(rawUserData.password, user.password)) {
+                let payload = {
+                    username: user.username,
+                };
+
+                let token = createJWT(payload);
+
                 return {
                     EM: 'OK!',
                     EC: 0,
-                    DT: {},
+                    DT: { access_token: token, username: user.username, balance: user.balance },
                 };
             }
         }

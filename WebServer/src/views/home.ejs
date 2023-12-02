@@ -18,7 +18,10 @@
                         />
                         <span class="ms-3">Smart Parking System</span>
                     </a>
-                    <span>Welcome Phát!</span>
+                    <span>Balance: <%= sessionInfo.balance %></span>
+
+                    <span>Welcome <%= sessionInfo.username %>!</span>
+                    <a href="/logout" style="color: #fff;">Logout</a>
                 </div>
             </nav>
         </div>
