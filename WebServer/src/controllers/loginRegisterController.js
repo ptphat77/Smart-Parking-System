@@ -1,7 +1,7 @@
 const loginRegisterService = require('../services/loginRegisterService');
 
 const showLogin = (req, res) => {
-    return res.render('login');
+    return res.render('login', {errorMessage: undefined});
 };
 
 const showRegister = (req, res) => {
@@ -9,16 +9,14 @@ const showRegister = (req, res) => {
 };
 
 const handleLogin = async (req, res) => {
-    var username = req.body.username;
-    var password = req.body.password;
 
     try {
-        let user = await loginRegisterService.checkUserLogin(username, password)
-        console.log(user);
-        if(user) {
+        let data = await loginRegisterService.checkUserLogin(req.body)
+        if(!data.EC) {
             res.redirect('/');
         }else {
-            res.status(400).json('Dang nhap khong dung');
+            // res.status(400).json(data.EM);
+            res.render('login', {errorMessage: data.EM});
         }
     } catch (error) {
         console.log('>>> Controller error:', error);
