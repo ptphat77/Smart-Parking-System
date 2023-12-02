@@ -1,15 +1,13 @@
 const homeController = require('../controllers/homeController');
 const iotController = require('../controllers/iotController');
-const webController = require('../controllers/webController');
-const userController = require('../controllers/userController');
-const loginController = require('../controllers/loginController');
+const LoginRegisterController = require('../controllers/loginRegisterController');
 
 function route(app) {
-    app.get('/register', webController.handleRegister);
-    app.get('/login', webController.handleLogin);
+    app.get('/register', LoginRegisterController.showRegister);
+    app.get('/login', LoginRegisterController.showLogin);
 
-    app.post('/register', userController.createFunc);
-    app.post('/login', loginController.checkUserFunc);
+    app.post('/register', LoginRegisterController.handleRegister);
+    app.post('/login', LoginRegisterController.handleLogin);
 
     app.post('/iot', iotController.updateFunc);
     app.get('/iot', iotController.readFunc);
