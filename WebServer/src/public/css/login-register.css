@@ -1,0 +1,21 @@
+.form-floating {
+    display: flex;
+    border-bottom: #c9c9c9 solid 1px;
+    margin-bottom: 24px;
+    outline: none;
+}
+
+.form-floating i {
+    display: flex;
+    align-items: center;
+    font-size: 22px;
+}
+
+.form-floating label {
+    margin-left: 20px;
+}
+
+.form-floating input {
+    outline: none;
+    border: none;
+}
