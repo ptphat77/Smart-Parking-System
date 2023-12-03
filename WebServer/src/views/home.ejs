@@ -69,10 +69,10 @@
 
                 slotContainer.innerHTML = htmls.join('');
 
-                const slotBtns = document.querySelectorAll('.slot__item');
+                const slotBtns = document.querySelectorAll('.slot__container .slot__item');
 
+                console.log('isHasBooking', isHasBooking);
                 if (!isHasBooking) {
-                    console.log('isHasBooking', isHasBooking);
                     slotBtns.forEach((slotBtn) => {
                         // Booking cannot be cancelled when slot is not blank
                         if (
@@ -86,8 +86,6 @@
                             const slotNumber = e.target.getAttribute('dataId');
 
                             slotListFE[slotNumber].isBooked = !slotListFE[slotNumber].isBooked;
-
-                            console.log('slotListFE', slotListFE);
 
                             await fetch(`<%= url %>:<%= port %>/`, {
                                 method: 'POST',
@@ -109,8 +107,8 @@
                                     console.error('Error:', error);
                                 });
 
+                            isHasBooking = true;
                             renderSlotBooking(slotNumber);
-                            renderSlotStatus();
                         });
                     });
                 }
@@ -133,12 +131,10 @@
                     .then((resoponse) => {
                         return resoponse.json();
                     })
-                    .then((slotNumber) => {
+                    .then(async (slotNumber) => {
                         console.log('slotNumber', slotNumber);
                         if (slotNumber !== null) {
-                            console.log('slotNumber if', slotNumber);
-                            renderSlotBooking(slotNumber);
-                            isHasBooking = true;
+                            await renderSlotBooking(slotNumber);
                         }
                     });
             };
@@ -172,6 +168,9 @@
                         .catch((error) => {
                             console.error('Error:', error);
                         });
+                    console.log('who:');
+                    isHasBooking = false;
+                    fetchSlotList();
                 });
             };
 

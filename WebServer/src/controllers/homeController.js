@@ -28,7 +28,6 @@ const showSlotBooking = async (req, res) => {
             return res.status(200).json(session.slotNumber);
         } else {
             return res.status(200).json(null);
-
         }
     } catch (error) {
         console.log('>>> Controller error:', error);
@@ -40,6 +39,7 @@ const cancelSlotBooking = async (req, res) => {
     try {
         await sessionService.removeSession(username);
         io.emit('fetch slot data', 'Broadcast success!!!');
+        return res.status(200).json({ message: 'Success!!!' });
     } catch (error) {
         console.log('>>> Controller error:', error);
     }
