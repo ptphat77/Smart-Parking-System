@@ -1,3 +1,4 @@
+const slotService = require('../services/slotService');
 const Session = require('../models/Session');
 
 const addSession = async (username, slotNumber) => {
@@ -14,7 +15,14 @@ const getSession = async (username) => {
     return session;
 };
 
-const removeSession = async (username) => {};
+const removeSession = async (username) => {
+    try {
+        let { slotNumber } = await Session.findOneAndDelete({ username: username });
+        await slotService.cancelBooking(slotNumber);
+    } catch (error) {
+        console.log('>>> Service error:', error);
+    }
+};
 
 module.exports = {
     addSession,

@@ -14,7 +14,8 @@ function route(app) {
     app.post('/iot', iotController.updateFunc);
     app.get('/iot', iotController.readFunc);
 
-    app.get('/session', homeController.showSlotBooking);
+    app.get('/booking', homeController.showSlotBooking);
+    app.post('/booking', homeController.cancelSlotBooking);
 
     app.post('/', homeController.bookSlot);
     app.get('/', checkUserJWT, homeController.getHomePage);

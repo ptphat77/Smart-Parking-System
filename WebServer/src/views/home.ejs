@@ -106,7 +106,7 @@
                                 console.error('Error:', error);
                             });
 
-                        renderSlotBooking(slotNumber)
+                        renderSlotBooking(slotNumber);
                     });
                 });
             };
@@ -123,21 +123,46 @@
                     });
             };
 
-            const renderSlotBooking = (slotNumber) => {
-                const bookingContainer = document.querySelector('.booking__container .row');
-                bookingContainer.innerHTML = `<div class="slot__item col-4 bg-warning"">
-                                                <b>Slot ${slotNumber}</b>
-                                            </div>`;
-            };
-
             const showSlotBooking = async () => {
-                await fetch(`<%= url %>:<%= port %>/session/`)
+                await fetch(`<%= url %>:<%= port %>/booking/`)
                     .then((resoponse) => {
                         return resoponse.json();
                     })
                     .then((slotNumber) => {
                         renderSlotBooking(slotNumber);
                     });
+            };
+
+            const renderSlotBooking = (slotNumber) => {
+                const bookingContainer = document.querySelector('.booking__container .row');
+                bookingContainer.innerHTML = `<div class="slot__item col-4 bg-warning cursor">
+                                                <b>Slot ${slotNumber}</b>
+                                            </div>`;
+                const slotBooking = document.querySelector('.booking__container .slot__item');
+
+                // cancel booking event
+                slotBooking.addEventListener('click', async (e) => {
+                    bookingContainer.innerHTML = '';
+                    await fetch(`<%= url %>:<%= port %>/booking/`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ username: '<%= sessionInfo.username %>' }),
+                    })
+                        .then((response) => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then((data) => {
+                            console.log('Success:', data);
+                        })
+                        .catch((error) => {
+                            console.error('Error:', error);
+                        });
+                });
             };
 
             window.addEventListener('load', async () => {

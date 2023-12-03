@@ -7,20 +7,38 @@ const getHomePage = async (req, res) => {
 };
 
 const bookSlot = async (req, res) => {
-    const slotBooked = req.body;
-    const username = req.session.info.username;
-    await slotService.updateSlotBooked(slotBooked);
-    await sessionService.addSession(username, slotBooked.slotNumber);
-    io.emit('fetch slot data', 'Broadcast success!!!');
+    try {
+        const slotBooked = req.body;
+        const username = req.session.info.username;
+        await slotService.updateSlotBooked(slotBooked);
+        await sessionService.addSession(username, slotBooked.slotNumber);
+        io.emit('fetch slot data', 'Broadcast success!!!');
 
-    return res.status(200).json({ message: 'Success!!!' });
+        return res.status(200).json({ message: 'Success!!!' });
+    } catch (error) {
+        console.log('>>> Controller error:', error);
+    }
 };
 
 const showSlotBooking = async (req, res) => {
-    const username = req.session.info.username;
-    let session = await sessionService.getSession(username);
-    if (session) {
-        return res.status(200).json(session.slotNumber);
+    try {
+        const username = req.session.info.username;
+        let session = await sessionService.getSession(username);
+        if (session) {
+            return res.status(200).json(session.slotNumber);
+        }
+    } catch (error) {
+        console.log('>>> Controller error:', error);
+    }
+};
+
+const cancelSlotBooking = async (req, res) => {
+    const username = req.body.username;
+    try {
+        await sessionService.removeSession(username);
+        io.emit('fetch slot data', 'Broadcast success!!!');
+    } catch (error) {
+        console.log('>>> Controller error:', error);
     }
 };
 
@@ -28,4 +46,5 @@ module.exports = {
     getHomePage,
     bookSlot,
     showSlotBooking,
+    cancelSlotBooking,
 };
