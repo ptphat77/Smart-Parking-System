@@ -46,7 +46,7 @@
         <script>
             let slotListFE = [];
 
-            const renderSlotList = (slotList) => {
+            const renderSlotStatus = (slotList) => {
                 const slotContainer = document.querySelector('.slot__container .row');
 
                 var htmls = slotList.map(function (slot) {
@@ -105,6 +105,8 @@
                             .catch((error) => {
                                 console.error('Error:', error);
                             });
+
+                        renderSlotBooking(slotNumber)
                     });
                 });
             };
@@ -117,8 +119,15 @@
                     .then((slotList) => {
                         console.log('slotList', slotList);
                         slotListFE = slotList;
-                        renderSlotList(slotList);
+                        renderSlotStatus(slotList);
                     });
+            };
+
+            const renderSlotBooking = (slotNumber) => {
+                const bookingContainer = document.querySelector('.booking__container .row');
+                bookingContainer.innerHTML = `<div class="slot__item col-4 bg-warning"">
+                                                <b>Slot ${slotNumber}</b>
+                                            </div>`;
             };
 
             const showSlotBooking = async () => {
@@ -127,11 +136,7 @@
                         return resoponse.json();
                     })
                     .then((slotNumber) => {
-                        console.log('slotNumber', slotNumber);
-                        const bookingContainer = document.querySelector('.booking__container .row');
-                        bookingContainer.innerHTML = `<div class="slot__item col-4 bg-warning"">
-                                <b>Slot ${slotNumber}</b>
-                            </div>`;
+                        renderSlotBooking(slotNumber);
                     });
             };
 
@@ -145,7 +150,6 @@
                 socket.on('fetch slot data', async (message) => {
                     console.log(message);
                     await fetchSlotList();
-                    await showSlotBooking();
                 });
 
                 // ####### Your booking #######
