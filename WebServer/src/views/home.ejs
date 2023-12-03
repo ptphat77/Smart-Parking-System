@@ -4,157 +4,159 @@
         <%- include('layouts/head.ejs') %>
     </head>
     <body>
-        <!-- Navbar -->
-        <div class="container">
-            <nav class="navbar navbar-light bg-primary">
-                <div class="container-fluid">
-                    <a class="navbar-brand d-flex align-items-center" href="#">
-                        <img
-                            src="https://www.uit.edu.vn/sites/vi/files/uploads/images/thumbs/202111/phong.png"
-                            alt=""
-                            width="40"
-                            height="40"
-                            class="d-inline-block align-text-top rounded-circle"
-                        />
-                        <span class="ms-3">Smart Parking System</span>
-                    </a>
-                    <span>Balance: <%= sessionInfo.balance %></span>
+        <div class="background">
+            <!-- Navbar -->
+            <div class="container home">
+                <nav class="navbar navbar-light">
+                    <div class="container-fluid">
+                        <a class="navbar-brand d-flex align-items-center" href="#">
+                            <img
+                                src="https://www.uit.edu.vn/sites/vi/files/uploads/images/thumbs/202111/phong.png"
+                                alt=""
+                                width="40"
+                                height="40"
+                                class="d-inline-block align-text-top rounded-circle"
+                            />
+                            <span class="ms-3">Smart Parking System</span>
+                        </a>
+                        <span>Balance: <%= sessionInfo.balance %></span>
 
-                    <span>Welcome <%= sessionInfo.username %>!</span>
-                    <a href="/logout" style="color: #fff">Logout</a>
+                        <span>Welcome <%= sessionInfo.username %>!</span>
+                        <a href="/logout" style="color: #fff">Logout</a>
+                    </div>
+                </nav>
+            </div>
+
+            <!-- Slot status -->
+            <div class="container mb-4">
+                <h2>Slot status</h2>
+                <div class="slot__container">
+                    <div class="row"></div>
                 </div>
-            </nav>
-        </div>
-
-        <!-- Slot status -->
-        <div class="container mb-4">
-            <h2>Slot status</h2>
-            <div class="slot__container">
-                <div class="row"></div>
             </div>
-        </div>
 
-        <!-- Your booking -->
-        <div class="container">
-            <h2>Your booking</h2>
-            <div class="booking__container">
-                <div class="row"></div>
+            <!-- Your booking -->
+            <div class="container">
+                <h2>Your booking</h2>
+                <div class="booking__container">
+                    <div class="row"></div>
+                </div>
             </div>
-        </div>
 
-        <script src="/socket.io/socket.io.js"></script>
-        <script>
-            let slotListFE = [];
+            <script src="/socket.io/socket.io.js"></script>
+            <script>
+                let slotListFE = [];
 
-            const renderSlotStatus = (slotList) => {
-                const slotContainer = document.querySelector('.slot__container .row');
+                const renderSlotStatus = (slotList) => {
+                    const slotContainer = document.querySelector('.slot__container .row');
 
-                var htmls = slotList.map(function (slot) {
-                    let BgColor = '';
-                    if (slot.isBooked) {
-                        BgColor = 'bg-warning';
-                    } else if (!slot.isBlank) {
-                        BgColor = 'bg-danger';
-                    } else {
-                        // slot.isBlank && !slot.isBooked
-                        BgColor = 'bg-success';
-                    }
+                    var htmls = slotList.map(function (slot) {
+                        let BgColor = '';
+                        if (slot.isBooked) {
+                            BgColor = 'bg-warning';
+                        } else if (!slot.isBlank) {
+                            BgColor = 'bg-danger';
+                        } else {
+                            // slot.isBlank && !slot.isBooked
+                            BgColor = 'bg-success';
+                        }
 
-                    const Cursor = !slot.isBlank || slot.isBooked ? '' : 'cursor';
-                    return `<div class="slot__item col-4 ${BgColor} ${Cursor}" dataId="${slot.slotNumber}">
+                        const Cursor = !slot.isBlank || slot.isBooked ? '' : 'cursor';
+                        return `<div class="slot__item col-4 ${BgColor} ${Cursor}" dataId="${slot.slotNumber}">
                                 <b>Slot ${slot.slotNumber}</b>
                             </div>`;
-                });
+                    });
 
-                slotContainer.innerHTML = htmls.join('');
+                    slotContainer.innerHTML = htmls.join('');
 
-                const slotBtns = document.querySelectorAll('.slot__item');
+                    const slotBtns = document.querySelectorAll('.slot__item');
 
-                slotBtns.forEach((slotBtn) => {
-                    // Booking cannot be cancelled when slot is not blank
-                    if (
-                        !slotListFE[slotBtn.getAttribute('dataId')].isBlank ||
-                        slotListFE[slotBtn.getAttribute('dataId')].isBooked
-                    ) {
-                        return;
-                    }
+                    slotBtns.forEach((slotBtn) => {
+                        // Booking cannot be cancelled when slot is not blank
+                        if (
+                            !slotListFE[slotBtn.getAttribute('dataId')].isBlank ||
+                            slotListFE[slotBtn.getAttribute('dataId')].isBooked
+                        ) {
+                            return;
+                        }
 
-                    slotBtn.addEventListener('click', async (e) => {
-                        const slotNumber = e.target.getAttribute('dataId');
+                        slotBtn.addEventListener('click', async (e) => {
+                            const slotNumber = e.target.getAttribute('dataId');
 
-                        slotListFE[slotNumber].isBooked = !slotListFE[slotNumber].isBooked;
+                            slotListFE[slotNumber].isBooked = !slotListFE[slotNumber].isBooked;
 
-                        console.log('slotListFE', slotListFE);
+                            console.log('slotListFE', slotListFE);
 
-                        await fetch(`<%= url %>:<%= port %>/`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify(slotListFE[slotNumber]),
+                            await fetch(`<%= url %>:<%= port %>/`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify(slotListFE[slotNumber]),
+                            })
+                                .then((response) => {
+                                    if (!response.ok) {
+                                        throw new Error('Network response was not ok');
+                                    }
+                                    return response.json();
+                                })
+                                .then((data) => {
+                                    console.log('Success:', data);
+                                })
+                                .catch((error) => {
+                                    console.error('Error:', error);
+                                });
+
+                            renderSlotBooking(slotNumber);
+                        });
+                    });
+                };
+
+                const fetchSlotList = async () => {
+                    await fetch(`<%= url %>:<%= port %>/iot/`)
+                        .then((resoponse) => {
+                            return resoponse.json();
                         })
-                            .then((response) => {
-                                if (!response.ok) {
-                                    throw new Error('Network response was not ok');
-                                }
-                                return response.json();
-                            })
-                            .then((data) => {
-                                console.log('Success:', data);
-                            })
-                            .catch((error) => {
-                                console.error('Error:', error);
-                            });
+                        .then((slotList) => {
+                            console.log('slotList', slotList);
+                            slotListFE = slotList;
+                            renderSlotStatus(slotList);
+                        });
+                };
 
-                        renderSlotBooking(slotNumber)
-                    });
-                });
-            };
-
-            const fetchSlotList = async () => {
-                await fetch(`<%= url %>:<%= port %>/iot/`)
-                    .then((resoponse) => {
-                        return resoponse.json();
-                    })
-                    .then((slotList) => {
-                        console.log('slotList', slotList);
-                        slotListFE = slotList;
-                        renderSlotStatus(slotList);
-                    });
-            };
-
-            const renderSlotBooking = (slotNumber) => {
-                const bookingContainer = document.querySelector('.booking__container .row');
-                bookingContainer.innerHTML = `<div class="slot__item col-4 bg-warning"">
+                const renderSlotBooking = (slotNumber) => {
+                    const bookingContainer = document.querySelector('.booking__container .row');
+                    bookingContainer.innerHTML = `<div class="slot__item col-4 bg-warning"">
                                                 <b>Slot ${slotNumber}</b>
                                             </div>`;
-            };
+                };
 
-            const showSlotBooking = async () => {
-                await fetch(`<%= url %>:<%= port %>/session/`)
-                    .then((resoponse) => {
-                        return resoponse.json();
-                    })
-                    .then((slotNumber) => {
-                        renderSlotBooking(slotNumber);
-                    });
-            };
+                const showSlotBooking = async () => {
+                    await fetch(`<%= url %>:<%= port %>/session/`)
+                        .then((resoponse) => {
+                            return resoponse.json();
+                        })
+                        .then((slotNumber) => {
+                            renderSlotBooking(slotNumber);
+                        });
+                };
 
-            window.addEventListener('load', async () => {
-                // ####### Slot status #######
-                await fetchSlotList();
-
-                // Socket.io
-                const socket = io();
-
-                socket.on('fetch slot data', async (message) => {
-                    console.log(message);
+                window.addEventListener('load', async () => {
+                    // ####### Slot status #######
                     await fetchSlotList();
-                });
 
-                // ####### Your booking #######
-                await showSlotBooking();
-            });
-        </script>
+                    // Socket.io
+                    const socket = io();
+
+                    socket.on('fetch slot data', async (message) => {
+                        console.log(message);
+                        await fetchSlotList();
+                    });
+
+                    // ####### Your booking #######
+                    await showSlotBooking();
+                });
+            </script>
+        </div>
     </body>
 </html>
