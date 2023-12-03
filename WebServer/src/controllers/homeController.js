@@ -26,6 +26,9 @@ const showSlotBooking = async (req, res) => {
         let session = await sessionService.getSession(username);
         if (session) {
             return res.status(200).json(session.slotNumber);
+        } else {
+            return res.status(200).json(null);
+
         }
     } catch (error) {
         console.log('>>> Controller error:', error);
