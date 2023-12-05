@@ -14,9 +14,6 @@ JsonArray sensorData = iotData.createNestedArray("data");
 WiFiClient client;
 HTTPClient http;
 
-// int IRsensor[3] = {2,3,4}; // Vị trí các chân IRsensor
-// int data[3],check;
-
 // Sensor data
 const size_t dataArrSize = 3;
 int IRsensor[dataArrSize] = {D2, D3, D4}; // Vị trí các chân nhận tín hiệu IR sensor
@@ -42,12 +39,16 @@ void setup()
 
 void getSensorData()
 {
+    iotData["errorCode"] = 0;
     for (size_t i = 0; i < dataArrSize; i++)
     {
-        // 0 là có vật cản, 1 là K có vật cản.
+        // 0 là có vật cản, 1 là K có vật cản
         check = digitalRead(IRsensor[i]); // Đọc tín hiệu từng IRsensor
         if (check != 0 && check != 1)
-            dataArr[i] = 2;
+        {
+            iotData["errorCode"] = 1;
+            dataArr[i] = 2; //2 là Sensor bị lỗi
+        }
         else
             dataArr[i] = check;
     }
@@ -64,11 +65,18 @@ void sendData()
     //        Serial.println(dataArr[i]);
     //    }
     //
-
-    iotData["errorCode"] = 0;
+    
+    // Chuẩn bị dữ liệu gởi đi - sensorData[]
+    // 0: Có vật cản
+    // 1: Không có vật cản
+    // 2: Tín hiệu Sensor bị lỗi
+    // -1: Trạng thái không đổi so với trước đó.
     for (size_t i = 0; i < dataArrSize; i++)
     {
-        sensorData[i] = dataArr[i];
+        if(preDataArr[i] == dataArr[i])
+            sensorData[i] = -1; // Nếu giá trị = -1 thì không push.
+        else
+            sensorData[i] = dataArr[i];
     }
 
     String jsonString;
