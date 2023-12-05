@@ -2,6 +2,15 @@
 #include <WiFiClient.h>
 #include <ESP8266HTTPClient.h>
 #include <ArduinoJson.h>
+#include <LiquidCrystal_I2C.h>
+#include <Wire.h>
+#include <Servo.h> 
+
+LiquidCrystal_I2C lcd(0x27,16,2);
+int servo = 6, goc;
+Servo myServo;
+
+int Gate_sensor = 7;
 
 const char *ssid = "UIT Public";                          // Enter your WIFI ssid
 const char *password = "";                                // Enter your WIFI password
@@ -65,19 +74,26 @@ void sendData()
     //        Serial.println(dataArr[i]);
     //    }
     //
+
     
     // Chuẩn bị dữ liệu gởi đi - sensorData[]
     // 0: Có vật cản
     // 1: Không có vật cản
     // 2: Tín hiệu Sensor bị lỗi
     // -1: Trạng thái không đổi so với trước đó.
+    bool equalPreData = true;
     for (size_t i = 0; i < dataArrSize; i++)
     {
         if(preDataArr[i] == dataArr[i])
             sensorData[i] = -1; // Nếu giá trị = -1 thì không push.
-        else
+        else{
             sensorData[i] = dataArr[i];
+            equalPreData = false; // dataArr != preDataArr
+        }    
     }
+
+    if(equalPreData == true) // Nếu dataArr trùng với preDataArr thì không gởi
+        return;
 
     String jsonString;
     serializeJson(iotData, jsonString);
@@ -116,15 +132,6 @@ void sendData()
 void loop()
 {
     getSensorData();
-
-    for (size_t i = 0; i < dataArrSize; i++)
-    {
-        if (preDataArr[i] != dataArr[i])
-        {
-            sendData();
-            break;
-        }
-    }
-
+    sendData();
     delay(1000);
 }
