@@ -2,6 +2,16 @@
 #include <WiFiClient.h>
 #include <ESP8266HTTPClient.h>
 #include <ArduinoJson.h>
+#include <LiquidCrystal_I2C.h>
+#include <Wire.h>
+#include <Servo.h> 
+
+LiquidCrystal_I2C lcd(0x27,16,2);
+
+int servo = 6;
+Servo myServo;
+
+int Gate_sensor = 7;
 
 const char *ssid = "UIT Public";                          // Enter your WIFI ssid
 const char *password = "";                                // Enter your WIFI password
@@ -13,9 +23,6 @@ JsonArray sensorData = iotData.createNestedArray("data");
 // Set up the client objet
 WiFiClient client;
 HTTPClient http;
-
-// int IRsensor[3] = {2,3,4}; // Vị trí các chân IRsensor
-// int data[3],check;
 
 // Sensor data
 const size_t dataArrSize = 3;
@@ -42,12 +49,16 @@ void setup()
 
 void getSensorData()
 {
+    iotData["errorCode"] = 0;
     for (size_t i = 0; i < dataArrSize; i++)
     {
-        // 0 là có vật cản, 1 là K có vật cản.
+        // 0 là có vật cản, 1 là K có vật cản
         check = digitalRead(IRsensor[i]); // Đọc tín hiệu từng IRsensor
         if (check != 0 && check != 1)
-            dataArr[i] = 2;
+        {
+            iotData["errorCode"] = 1;
+            dataArr[i] = 2; //2 là Sensor bị lỗi
+        }
         else
             dataArr[i] = check;
     }
@@ -65,11 +76,25 @@ void sendData()
     //    }
     //
 
-    iotData["errorCode"] = 0;
+    
+    // Chuẩn bị dữ liệu gởi đi - sensorData[]
+    // 0: Có vật cản
+    // 1: Không có vật cản
+    // 2: Tín hiệu Sensor bị lỗi
+    // -1: Trạng thái không đổi so với trước đó.
+    bool equalPreData = true;
     for (size_t i = 0; i < dataArrSize; i++)
     {
-        sensorData[i] = dataArr[i];
+        if(preDataArr[i] == dataArr[i])
+            sensorData[i] = -1; // Nếu giá trị = -1 thì không push.
+        else{
+            sensorData[i] = dataArr[i];
+            equalPreData = false; // dataArr != preDataArr
+        }    
     }
+
+    if(equalPreData == true) // Nếu dataArr trùng với preDataArr thì không gởi
+        return;
 
     String jsonString;
     serializeJson(iotData, jsonString);
@@ -105,18 +130,48 @@ void sendData()
     return;
 }
 
+void gate()
+{
+    // Check slot trống
+    int slot = 0;
+    for (size_t i = 0; i < dataArrSize; i++)
+      if(dataArr[i] == 1)
+        slot += 1;
+
+    //Sử lý mở cổng
+    if(digitalRead(Gate_sensor) == 0 && slot != 0)
+    {
+        myServo.write(0); // Mở cổng
+    }
+    else{
+        myServo.write(90); // Không mở cổng
+    }
+    delay(1000);
+
+    // In ra màn led
+    if(slot != 0)
+    {
+        lcd.clear();
+        lcd.setCursor(0,0);
+        lcd.print("    WELCOME!    ");
+        lcd.setCursor (0,1);
+        lcd.print("Slot Left: ");
+        lcd.print(slot);
+    } 
+    else{
+        lcd.clear();
+        lcd.setCursor(0,0);
+        lcd.print("    SORRY :(    ");  
+        lcd.setCursor (0,1);
+        lcd.print("  Parking Full  "); 
+    } 
+    delay (3000);
+}
+
 void loop()
 {
     getSensorData();
-
-    for (size_t i = 0; i < dataArrSize; i++)
-    {
-        if (preDataArr[i] != dataArr[i])
-        {
-            sendData();
-            break;
-        }
-    }
-
+    sendData();
+    gate();
     delay(1000);
 }
