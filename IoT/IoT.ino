@@ -7,7 +7,8 @@
 #include <Servo.h> 
 
 LiquidCrystal_I2C lcd(0x27,16,2);
-int servo = 6, goc;
+
+int servo = 6;
 Servo myServo;
 
 int Gate_sensor = 7;
@@ -129,9 +130,48 @@ void sendData()
     return;
 }
 
+void gate()
+{
+    // Check slot trống
+    int slot = 0;
+    for (size_t i = 0; i < dataArrSize; i++)
+      if(dataArr[i] == 1)
+        slot += 1;
+
+    //Sử lý mở cổng
+    if(digitalRead(Gate_sensor) == 0 && slot != 0)
+    {
+        myServo.write(0); // Mở cổng
+    }
+    else{
+        myServo.write(90); // Không mở cổng
+    }
+    delay(1000);
+
+    // In ra màn led
+    if(slot != 0)
+    {
+        lcd.clear();
+        lcd.setCursor(0,0);
+        lcd.print("    WELCOME!    ");
+        lcd.setCursor (0,1);
+        lcd.print("Slot Left: ");
+        lcd.print(slot);
+    } 
+    else{
+        lcd.clear();
+        lcd.setCursor(0,0);
+        lcd.print("    SORRY :(    ");  
+        lcd.setCursor (0,1);
+        lcd.print("  Parking Full  "); 
+    } 
+    delay (3000);
+}
+
 void loop()
 {
     getSensorData();
     sendData();
+    gate();
     delay(1000);
 }
