@@ -1,7 +1,7 @@
 const homeController = require('../controllers/homeController');
 const iotController = require('../controllers/iotController');
 const authController = require('../controllers/authController');
-const qrCodeController = require('../controllers/qrCodeController'); 
+const qrCodeController = require('../controllers/qrCodeController');
 import { checkUserJWT } from '../middleware/JWTAction';
 
 function route(app) {

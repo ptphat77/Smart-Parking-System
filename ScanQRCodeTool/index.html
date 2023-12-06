@@ -21,11 +21,35 @@
 </div>
 
 <script type="text/javascript">
-    function onScanSuccess(qrCodeMessage) {
+    function sleep(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+    async function onScanSuccess(qrCodeMessage) {
         document.getElementById('result').innerHTML = '<span class="result">' + qrCodeMessage + '</span>';
+        await fetch(`http://localhost:3000/qrcode/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ data: 'qrCodeMessage' }),
+            // mode: 'no-cors',
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then((data) => {
+                console.log('Success:', data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        html5QrcodeScanner.clear();
     }
 
-    function onScanError(errorMessage) {
+    async function onScanError(errorMessage) {
         //handle scan error
     }
 
