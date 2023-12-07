@@ -42,8 +42,24 @@
                     <div class="row"></div>
                 </div>
             </div>
-
-
+        </div>
+        <div class="modal" tabindex="-1">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Your QR</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body qr__container">
+                    
+                </div>
+                <!-- <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary">Save changes</button>
+                </div> -->
+              </div>
+            </div>
+          </div>
         <script src="/socket.io/socket.io.js"></script>
         <script>
             let slotListFE = [];
@@ -68,16 +84,14 @@
 
                                 <b>Slot ${slot.slotNumber}</b>
                             </div>`;
-                    });
+                });
 
-                    slotContainer.innerHTML = htmls.join('');
-
+                slotContainer.innerHTML = htmls.join('');
 
                 const slotBtns = document.querySelectorAll('.slot__container .slot__item');
 
                 console.log('isHasBooking', isHasBooking);
                 if (!isHasBooking) {
-
                     slotBtns.forEach((slotBtn) => {
                         // Booking cannot be cancelled when slot is not blank
                         if (
@@ -91,7 +105,6 @@
                             const slotNumber = e.target.getAttribute('dataId');
 
                             slotListFE[slotNumber].isBooked = !slotListFE[slotNumber].isBooked;
-
 
                             await fetch(`<%= url %>:<%= port %>/`, {
                                 method: 'POST',

@@ -7,6 +7,7 @@ const User = new Schema({
     password: { type: String, require: true },
     balance: { type: Number, require: true, default: 0 },
     numberPlate: { type: String, require: true },
+    token: { type: String, default: null },
 });
 
 module.exports = mongoose.model('User', User);

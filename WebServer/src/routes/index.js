@@ -21,8 +21,8 @@ function route(app) {
     app.post('/qrcode', qrCodeController.getNumberPlate);
 
     app.post('/', homeController.bookSlot);
-    // app.get('/', checkUserJWT, homeController.getHomePage);
-    app.get('/', homeController.getHomePage);
+    app.get('/', checkUserJWT, homeController.getHomePage);
+    // app.get('/', homeController.getHomePage);
 }
 
 module.exports = route;
