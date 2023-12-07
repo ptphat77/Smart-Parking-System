@@ -19,6 +19,7 @@ function route(app) {
     app.post('/booking', homeController.cancelSlotBooking);
 
     app.post('/qrcode', qrCodeController.getNumberPlate);
+    app.get('/qrcode', qrCodeController.getQrCode);
 
     app.post('/', homeController.bookSlot);
     app.get('/', checkUserJWT, homeController.getHomePage);

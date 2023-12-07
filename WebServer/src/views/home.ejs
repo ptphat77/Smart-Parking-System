@@ -19,9 +19,22 @@
                             />
                             <span class="ms-3">Smart Parking System</span>
                         </a>
+
                         <span>Balance: <%= sessionInfo.balance %></span>
 
+                        <!-- Button trigger modal -->
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            data-bs-toggle="modal"
+                            data-bs-target="#exampleModal"
+                            onclick="getQRCode();" 
+                        >
+                            QR Code
+                        </button>
+
                         <span>Welcome <%= sessionInfo.username %>!</span>
+
                         <a href="/logout" style="color: #fff">Logout</a>
                     </div>
                 </nav>
@@ -42,24 +55,27 @@
                     <div class="row"></div>
                 </div>
             </div>
-        </div>
-        <div class="modal" tabindex="-1">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title">Your QR</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+            <!-- Modal -->
+            <div
+                class="modal fade"
+                id="exampleModal"
+                tabindex="-1"
+                aria-labelledby="exampleModalLabel"
+                aria-hidden="true"
+            >
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Your QR Code</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body qr__container"></div>
+                    </div>
                 </div>
-                <div class="modal-body qr__container">
-                    
-                </div>
-                <!-- <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-primary">Save changes</button>
-                </div> -->
-              </div>
             </div>
-          </div>
+        </div>
+
         <script src="/socket.io/socket.io.js"></script>
         <script>
             let slotListFE = [];
@@ -191,6 +207,22 @@
                     isHasBooking = false;
                     fetchSlotList();
                 });
+            };
+
+            const getQRCode = async () => {
+                await fetch(`<%= url %>:<%= port %>/qrcode/`)
+                    .then((resoponse) => {
+                        return resoponse.json();
+                    })
+                    .then(async (qrString) => {
+                        console.log("qrString:", qrString);
+                        const qrContainer = document.querySelector('.qr__container');
+                        if (qrString) {
+                            qrContainer.innerHTML = `<img src="${qrString}"/>`;
+                        } else {
+                            qrContainer.innerHTML = `<h2>You haven't book slot</h2>`;
+                        }
+                    });
             };
 
             window.addEventListener('load', async () => {
