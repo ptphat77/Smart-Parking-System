@@ -7,6 +7,7 @@ const createToken = async (username) => {
         length: 32,
     });
     await User.updateOne({ username }, { token });
+    return token;
 };
 
 const removeToken = async (username) => {
@@ -15,7 +16,7 @@ const removeToken = async (username) => {
 
 const getToken = async (username) => {
     const data = await User.findOne({ username }, 'token');
-    return data.token
+    return data.token;
 };
 
 module.exports = {

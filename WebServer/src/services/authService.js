@@ -31,7 +31,7 @@ const checkUserLogin = async (rawUserData) => {
                 return {
                     EM: 'OK!',
                     EC: 0,
-                    DT: { access_token: token, username: user.username, balance: user.balance },
+                    DT: { access_token: token, username: user.username, balance: user.balance, isParking: user.isParking},
                 };
             }
         }

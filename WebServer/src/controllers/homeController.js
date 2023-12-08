@@ -1,40 +1,43 @@
-const slotService = require('../services/slotService');
+const userService = require('../services/userService');
 const qrService = require('../services/qrService');
 import { io } from '../server';
 
 const getHomePage = async (req, res) => {
-    console.log("Session Info: ", req.session.info);
+    console.log('Session Info: ', req.session.info);
     return res.render('home', { url: process.env.SERVER_URL, port: process.env.PORT, sessionInfo: req.session.info });
 };
 
-const bookSlot = async (req, res) => {
+const bookingRequest = async (req, res) => {
     try {
-        const slotBooked = req.body;
         const username = req.session.info.username;
-        await slotService.updateSlotBooked(slotBooked);
-        await qrService.createToken(username);
+        userService.setIsParking(username, true);
         io.emit('fetch slot data', 'Broadcast success!!!');
 
-        return res.status(200).json({ message: 'Success!!!' });
+        return res.status(200).json('success');
+
     } catch (error) {
         console.log('>>> Controller error:', error);
     }
 };
 
-const showSlotBooking = async (req, res) => {
+const bookingStatus = async (req, res) => {
     try {
         const username = req.session.info.username;
+        const isParking = await userService.getIsParking(username);
+        
+        return res.status(200).json(isParking);
     } catch (error) {
         console.log('>>> Controller error:', error);
     }
 };
 
-const cancelSlotBooking = async (req, res) => {
-    const username = req.body.username;
+const cancelBooking = async (req, res) => {
     try {
-        await qrService.removeToken(username);
+        const username = req.session.info.username;
+        userService.setIsParking(username, false);
         io.emit('fetch slot data', 'Broadcast success!!!');
-        return res.status(200).json({ message: 'Success!!!' });
+
+        return res.status(200).json('success');
     } catch (error) {
         console.log('>>> Controller error:', error);
     }
@@ -42,7 +45,7 @@ const cancelSlotBooking = async (req, res) => {
 
 module.exports = {
     getHomePage,
-    bookSlot,
-    showSlotBooking,
-    cancelSlotBooking,
+    bookingRequest,
+    cancelBooking,
+    bookingStatus,
 };

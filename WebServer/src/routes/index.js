@@ -15,13 +15,13 @@ function route(app) {
     app.post('/iot', iotController.updateFunc);
     app.get('/iot', iotController.readFunc);
 
-    app.get('/booking', homeController.showSlotBooking);
-    app.post('/booking', homeController.cancelSlotBooking);
+    app.get('/booking/create', homeController.bookingRequest);
+    app.get('/booking/cancel', homeController.cancelBooking);
+    app.get('/booking/status', homeController.bookingStatus);
 
     app.post('/qrcode', qrCodeController.getNumberPlate);
     app.get('/qrcode', qrCodeController.getQrCode);
 
-    app.post('/', homeController.bookSlot);
     app.get('/', checkUserJWT, homeController.getHomePage);
     // app.get('/', homeController.getHomePage);
 }

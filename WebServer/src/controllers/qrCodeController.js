@@ -3,14 +3,15 @@ const qrCode = require('qrcode');
 const qrService = require('../services/qrService');
 
 const getNumberPlate = async (req, res) => {
-    const token = req.body;
+    const token = req.body.token;
     console.log('getNumberPlate: ', token);
     return res.sendStatus(200);
 };
 
 const getQrCode = async (req, res) => {
     const username = req.session.info.username;
-    const token = await qrService.getToken(username);
+    
+    const token = await qrService.createToken(username);
 
     if (token) {
         let qrString = await qrCode.toDataURL(token);

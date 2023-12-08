@@ -43,7 +43,17 @@
                 <h2>Your booking</h2>
                 <div class="booking__container">
                     <!-- Booking button -->
-                    <button type="button" class="btn btn-primary booking__btn">Book</button>
+                    <button
+                        type="button"
+                        class="btn btn-success booking-request__btn"
+                        onclick="bookingRequest();"
+                        hidden
+                    >
+                        Book
+                    </button>
+                    <button type="button" class="btn btn-danger cancel-booking__btn" onclick="cancelBooking();" hidden>
+                        Cancel Booking
+                    </button>
                     <!-- Button trigger modal QR Code-->
                     <button
                         type="button"
@@ -55,6 +65,11 @@
                         QR Code
                     </button>
                 </div>
+            </div>
+
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>Holy guacamole!</strong> You should check in on some of those fields below.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
 
             <!-- Modal -->
@@ -134,9 +149,48 @@
                     });
             };
 
+            const bookingRequest = async () => {
+                await fetch(`<%= url %>:<%= port %>/booking/create`)
+                    .then((resoponse) => {
+                        return resoponse.json();
+                    })
+                    .then((data) => {});
+
+                await bookingStatus();
+            };
+
+            const cancelBooking = async () => {
+                await fetch(`<%= url %>:<%= port %>/booking/cancel`)
+                    .then((resoponse) => {
+                        return resoponse.json();
+                    })
+                    .then((data) => {});
+
+                await bookingStatus();
+            };
+
+            const bookingStatus = async () => {
+                await fetch(`<%= url %>:<%= port %>/booking/status`)
+                    .then((resoponse) => {
+                        return resoponse.json();
+                    })
+                    .then(async (isParking) => {
+                        console.log(isParking);
+                        if (isParking) {
+                            document.querySelector('.cancel-booking__btn').hidden = false;
+                            document.querySelector('.booking-request__btn').hidden = true;
+                        } else {
+                            document.querySelector('.booking-request__btn').hidden = false;
+                            document.querySelector('.cancel-booking__btn').hidden = true;
+                        }
+                    });
+            };
+
             window.addEventListener('load', async () => {
                 // ####### Slot status #######
                 await fetchSlotStatus();
+
+                await bookingStatus();
 
                 // Socket.io
                 const socket = io();
