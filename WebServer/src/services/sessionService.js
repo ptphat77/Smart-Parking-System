@@ -3,7 +3,7 @@ const Session = require('../models/Session');
 
 const addSession = async (username, slotNumber) => {
     try {
-        const session = new Session({ username, slotNumber });
+        const session = new Session({ username, slotNumber, startTime: Date.now() });
         await session.save();
     } catch (error) {
         console.log('>>> Service error:', error);

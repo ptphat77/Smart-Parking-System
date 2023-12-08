@@ -20,6 +20,15 @@
     </div>
 </div>
 
+<div class="row">
+    <div class="col">
+        <div style="width: 500px" id="reader"></div>
+    </div>
+    <div class="col" style="padding: 30px">
+        <button onclick="openDoor();">Open Door</button>
+    </div>
+</div>
+
 <script type="text/javascript">
     function sleep(ms) {
         return new Promise((resolve) => setTimeout(resolve, ms));
@@ -31,7 +40,7 @@
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ data: 'qrCodeMessage' }),
+            body: JSON.stringify({ token: 'qrCodeMessage' }),
             // mode: 'no-cors',
         })
             .then((response) => {
@@ -55,4 +64,31 @@
 
     var html5QrcodeScanner = new Html5QrcodeScanner('reader', { fps: 10, qrbox: 250 });
     html5QrcodeScanner.render(onScanSuccess, onScanError);
+
+    // Open Door
+    const openDoor = async () => {
+        // Get nunber plate in element has class "result"
+        const resultElement = document.querySelector('.result');
+        const numberPlate = resultElement.textContent;
+        await fetch(`http://localhost:3000/parkingEntrance/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ numberPlate }),
+            // mode: 'no-cors',
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then((data) => {
+                console.log('Success:', data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    };
 </script>
