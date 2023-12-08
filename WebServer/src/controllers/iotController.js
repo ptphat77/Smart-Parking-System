@@ -1,4 +1,5 @@
 const slotService = require('../services/slotService');
+const userService = require('../services/userService');
 import { io } from '../server';
 
 const updateFunc = async (req, res) => {
@@ -13,8 +14,9 @@ const updateFunc = async (req, res) => {
 };
 
 const readFunc = async (req, res) => {
-    let slotList = await slotService.getSlotList();
-    return res.status(200).json(slotList);
+    const slotList = await slotService.getSlotList();
+    const availability = await userService.getAvailability();
+    return res.status(200).json({slotList, availability});
 };
 
 module.exports = {

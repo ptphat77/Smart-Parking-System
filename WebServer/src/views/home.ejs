@@ -22,17 +22,6 @@
 
                         <span>Balance: <%= sessionInfo.balance %></span>
 
-                        <!-- Button trigger modal -->
-                        <button
-                            type="button"
-                            class="btn btn-primary"
-                            data-bs-toggle="modal"
-                            data-bs-target="#exampleModal"
-                            onclick="getQRCode();" 
-                        >
-                            QR Code
-                        </button>
-
                         <span>Welcome <%= sessionInfo.username %>!</span>
 
                         <a href="/logout" style="color: #fff">Logout</a>
@@ -43,6 +32,7 @@
             <!-- Slot status -->
             <div class="container mb-4">
                 <h2>Slot status</h2>
+                <h3>Availability: <span class="slot__availability"></span></h3>
                 <div class="slot__container">
                     <div class="row"></div>
                 </div>
@@ -52,7 +42,18 @@
             <div class="container">
                 <h2>Your booking</h2>
                 <div class="booking__container">
-                    <div class="row"></div>
+                    <!-- Booking button -->
+                    <button type="button" class="btn btn-primary booking__btn">Book</button>
+                    <!-- Button trigger modal QR Code-->
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#exampleModal"
+                        onclick="getQRCode();"
+                    >
+                        QR Code
+                    </button>
                 </div>
             </div>
 
@@ -78,25 +79,22 @@
 
         <script src="/socket.io/socket.io.js"></script>
         <script>
-            let slotListFE = [];
             let isHasBooking = false;
 
-            const renderSlotStatus = () => {
+            const renderSlotStatus = (slotStatus) => {
+                const slotAvailability = document.querySelector('.slot__availability');
                 const slotContainer = document.querySelector('.slot__container .row');
 
-                var htmls = slotListFE.map(function (slot) {
+                // Show slot status
+                var htmls = slotStatus.slotList.map(function (slot) {
                     let BgColor = '';
-                    if (slot.isBooked) {
-                        BgColor = 'bg-warning';
-                    } else if (!slot.isBlank) {
+                    if (!slot.isBlank) {
                         BgColor = 'bg-danger';
                     } else {
-                        // slot.isBlank && !slot.isBooked
                         BgColor = 'bg-success';
                     }
 
-                    const Cursor = !slot.isBlank || slot.isBooked || isHasBooking ? '' : 'cursor';
-                    return `<div class="slot__item col-4 ${BgColor} ${Cursor}" dataId="${slot.slotNumber}">
+                    return `<div class="slot__item col-4 ${BgColor}" dataId="${slot.slotNumber}">
 
                                 <b>Slot ${slot.slotNumber}</b>
                             </div>`;
@@ -106,107 +104,18 @@
 
                 const slotBtns = document.querySelectorAll('.slot__container .slot__item');
 
-                console.log('isHasBooking', isHasBooking);
-                if (!isHasBooking) {
-                    slotBtns.forEach((slotBtn) => {
-                        // Booking cannot be cancelled when slot is not blank
-                        if (
-                            !slotListFE[slotBtn.getAttribute('dataId')].isBlank ||
-                            slotListFE[slotBtn.getAttribute('dataId')].isBooked
-                        ) {
-                            return;
-                        }
-
-                        slotBtn.addEventListener('click', async (e) => {
-                            const slotNumber = e.target.getAttribute('dataId');
-
-                            slotListFE[slotNumber].isBooked = !slotListFE[slotNumber].isBooked;
-
-                            await fetch(`<%= url %>:<%= port %>/`, {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                },
-                                body: JSON.stringify(slotListFE[slotNumber]),
-                            })
-                                .then((response) => {
-                                    if (!response.ok) {
-                                        throw new Error('Network response was not ok');
-                                    }
-                                    return response.json();
-                                })
-                                .then((data) => {
-                                    console.log('Success:', data);
-                                })
-                                .catch((error) => {
-                                    console.error('Error:', error);
-                                });
-
-                            isHasBooking = true;
-                            renderSlotBooking(slotNumber);
-                        });
-                    });
-                }
+                // Show slot availability
+                slotAvailability.innerHTML = `${slotStatus.availability}/${slotStatus.slotList.length}`;
             };
 
-            const fetchSlotList = async () => {
+            const fetchSlotStatus = async () => {
                 await fetch(`<%= url %>:<%= port %>/iot/`)
                     .then((resoponse) => {
                         return resoponse.json();
                     })
-                    .then((slotList) => {
-                        console.log('slotList', slotList);
-                        slotListFE = slotList;
-                        renderSlotStatus();
+                    .then((slotStatus) => {
+                        renderSlotStatus(slotStatus);
                     });
-            };
-
-            const showSlotBooking = async () => {
-                await fetch(`<%= url %>:<%= port %>/booking/`)
-                    .then((resoponse) => {
-                        return resoponse.json();
-                    })
-                    .then(async (slotNumber) => {
-                        console.log('slotNumber', slotNumber);
-                        if (slotNumber !== null) {
-                            await renderSlotBooking(slotNumber);
-                        }
-                    });
-            };
-
-            const renderSlotBooking = (slotNumber) => {
-                const bookingContainer = document.querySelector('.booking__container .row');
-                bookingContainer.innerHTML = `<div class="slot__item col-4 bg-warning cursor">
-                                                <b>Slot ${slotNumber}</b>
-                                            </div>`;
-                const slotBooking = document.querySelector('.booking__container .slot__item');
-
-                // cancel booking event
-                slotBooking.addEventListener('click', async (e) => {
-                    bookingContainer.innerHTML = '';
-                    await fetch(`<%= url %>:<%= port %>/booking/`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ username: '<%= sessionInfo.username %>' }),
-                    })
-                        .then((response) => {
-                            if (!response.ok) {
-                                throw new Error('Network response was not ok');
-                            }
-                            return response.json();
-                        })
-                        .then((data) => {
-                            console.log('Success:', data);
-                        })
-                        .catch((error) => {
-                            console.error('Error:', error);
-                        });
-                    console.log('who:');
-                    isHasBooking = false;
-                    fetchSlotList();
-                });
             };
 
             const getQRCode = async () => {
@@ -215,7 +124,7 @@
                         return resoponse.json();
                     })
                     .then(async (qrString) => {
-                        console.log("qrString:", qrString);
+                        console.log('qrString:', qrString);
                         const qrContainer = document.querySelector('.qr__container');
                         if (qrString) {
                             qrContainer.innerHTML = `<img src="${qrString}"/>`;
@@ -226,18 +135,15 @@
             };
 
             window.addEventListener('load', async () => {
-                // ####### Your booking #######
-                await showSlotBooking();
-
                 // ####### Slot status #######
-                await fetchSlotList();
+                await fetchSlotStatus();
 
                 // Socket.io
                 const socket = io();
 
                 socket.on('fetch slot data', async (message) => {
                     console.log(message);
-                    await fetchSlotList();
+                    await fetchSlotStatus();
                 });
             });
         </script>

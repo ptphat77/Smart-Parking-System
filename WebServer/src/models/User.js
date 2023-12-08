@@ -8,6 +8,8 @@ const User = new Schema({
     balance: { type: Number, require: true, default: 0 },
     numberPlate: { type: String, require: true },
     token: { type: String, default: null },
+    createdAtToken: { type: Date },
+    isParking: { type: Boolean, default: false },
 });
 
 module.exports = mongoose.model('User', User);
