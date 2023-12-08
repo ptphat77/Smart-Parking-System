@@ -1,5 +1,4 @@
 const userService = require('../services/userService');
-const qrService = require('../services/qrService');
 import { io } from '../server';
 
 const getHomePage = async (req, res) => {
@@ -58,9 +57,18 @@ const cancelBooking = async (req, res) => {
     }
 };
 
+const getBalance = async (req, res) => {
+    const username = req.session.info.username;
+
+    const balance = await userService.getBalanceUser(username);
+
+    return res.status(200).json(balance);
+};
+
 module.exports = {
     getHomePage,
     bookingRequest,
     cancelBooking,
     bookingStatus,
+    getBalance,
 };

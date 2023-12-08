@@ -20,7 +20,7 @@
                             <span class="ms-3">Smart Parking System</span>
                         </a>
 
-                        <span>Balance: <%= sessionInfo.balance %></span>
+                        <span class="balance"></span>
 
                         <span>Welcome <%= sessionInfo.username %>!</span>
 
@@ -165,6 +165,7 @@
                     .then((data) => {});
 
                 await bookingStatus();
+                await getbalance();
             };
 
             const bookingStatus = async () => {
@@ -183,11 +184,23 @@
                     });
             };
 
+            const getbalance = async () => {
+                await fetch(`<%= url %>:<%= port %>/balance`)
+                    .then((resoponse) => {
+                        return resoponse.json();
+                    })
+                    .then(async (balance) => {
+                        document.querySelector('.balance').innerHTML = `Balance: ${balance}`;
+                    });
+            };
+
             window.addEventListener('load', async () => {
                 // ####### Slot status #######
                 await fetchSlotStatus();
 
                 await bookingStatus();
+
+                await getbalance();
 
                 // Socket.io
                 const socket = io();

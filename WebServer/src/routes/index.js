@@ -19,6 +19,8 @@ function route(app) {
     app.get('/booking/cancel', homeController.cancelBooking);
     app.get('/booking/status', homeController.bookingStatus);
 
+    app.get('/balance', homeController.getBalance);
+
     app.post('/qrcode', qrCodeController.getNumberPlate);
     app.get('/qrcode', qrCodeController.getQrCode);
 
