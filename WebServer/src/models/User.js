@@ -8,7 +8,7 @@ const User = new Schema({
     balance: { type: Number, require: true, default: 0 },
     numberPlate: { type: String, require: true },
     token: { type: String, default: null },
-    createdAtToken: { type: Date },
+    startTime: { type: String, default: null },
     isParking: { type: Boolean, default: false },
 });
 

@@ -4,14 +4,23 @@ import { io } from '../server';
 
 const getHomePage = async (req, res) => {
     console.log('Session Info: ', req.session.info);
-    return res.render('home', { url: process.env.SERVER_URL, port: process.env.PORT, sessionInfo: req.session.info });
+    if (req.session.info) {
+        return res.render('home', {
+            url: process.env.SERVER_URL,
+            port: process.env.PORT,
+            sessionInfo: req.session.info,
+        });
+    } else {
+        return res.redirect('/login');
+    }
 };
 
 const bookingRequest = async (req, res) => {
     try {
         const username = req.session.info.username;
         const isParking = true;
-        userService.setIsParking(username, isParking);
+        await userService.setIsParking(username, isParking);
+        await userService.setCreatedAtToken(username);
 
         io.emit('fetch slot data', 'Broadcast success!!!');
         req.session.info.isParking = isParking;
@@ -37,7 +46,8 @@ const cancelBooking = async (req, res) => {
     try {
         const username = req.session.info.username;
         const isParking = false;
-        userService.setIsParking(username, isParking);
+        await userService.paymentBooking(username);
+        await userService.setIsParking(username, isParking);
 
         io.emit('fetch slot data', 'Broadcast success!!!');
         req.session.info.isParking = isParking;
