@@ -9,11 +9,13 @@ const getNumberPlate = async (req, res) => {
 };
 
 const getQrCode = async (req, res) => {
-    const username = req.session.info.username;
-    
-    const token = await qrService.createToken(username);
+    const isParking = req.session.info.isParking;
 
-    if (token) {
+    if (isParking) {
+        const username = req.session.info.username;
+
+        const token = await qrService.createToken(username);
+
         let qrString = await qrCode.toDataURL(token);
 
         return res.status(200).json(qrString);

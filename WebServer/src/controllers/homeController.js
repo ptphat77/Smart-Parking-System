@@ -10,11 +10,13 @@ const getHomePage = async (req, res) => {
 const bookingRequest = async (req, res) => {
     try {
         const username = req.session.info.username;
-        userService.setIsParking(username, true);
+        const isParking = true;
+        userService.setIsParking(username, isParking);
+
         io.emit('fetch slot data', 'Broadcast success!!!');
+        req.session.info.isParking = isParking;
 
         return res.status(200).json('success');
-
     } catch (error) {
         console.log('>>> Controller error:', error);
     }
@@ -24,7 +26,7 @@ const bookingStatus = async (req, res) => {
     try {
         const username = req.session.info.username;
         const isParking = await userService.getIsParking(username);
-        
+
         return res.status(200).json(isParking);
     } catch (error) {
         console.log('>>> Controller error:', error);
@@ -34,8 +36,11 @@ const bookingStatus = async (req, res) => {
 const cancelBooking = async (req, res) => {
     try {
         const username = req.session.info.username;
-        userService.setIsParking(username, false);
+        const isParking = false;
+        userService.setIsParking(username, isParking);
+
         io.emit('fetch slot data', 'Broadcast success!!!');
+        req.session.info.isParking = isParking;
 
         return res.status(200).json('success');
     } catch (error) {

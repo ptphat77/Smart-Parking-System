@@ -6,7 +6,8 @@ const createToken = async (username) => {
     const token = randomstring.generate({
         length: 32,
     });
-    await User.updateOne({ username }, { token });
+    await User.updateOne({ username, isParking: true }, { token });
+
     return token;
 };
 

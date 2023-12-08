@@ -94,8 +94,6 @@
 
         <script src="/socket.io/socket.io.js"></script>
         <script>
-            let isHasBooking = false;
-
             const renderSlotStatus = (slotStatus) => {
                 const slotAvailability = document.querySelector('.slot__availability');
                 const slotContainer = document.querySelector('.slot__container .row');
@@ -175,7 +173,6 @@
                         return resoponse.json();
                     })
                     .then(async (isParking) => {
-                        console.log(isParking);
                         if (isParking) {
                             document.querySelector('.cancel-booking__btn').hidden = false;
                             document.querySelector('.booking-request__btn').hidden = true;
