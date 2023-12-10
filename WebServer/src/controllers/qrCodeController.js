@@ -2,10 +2,22 @@ const qrCode = require('qrcode');
 
 const qrService = require('../services/qrService');
 
-const getNumberPlate = async (req, res) => {
+const checkNumberPlate = async (req, res) => {
     const token = req.body.token;
-    console.log('getNumberPlate: ', token);
-    return res.sendStatus(200);
+    const numberPlate = await qrService.getNumberPlateUser(token);
+
+    console.log(numberPlate);
+
+    const isNumberPlateExists = await qrService.checkNumberPlateExists(numberPlate);
+
+    if (isNumberPlateExists) {
+        // Open door
+    }
+
+    // Announce to qr scan tool
+
+    // console.log('getNumberPlate: ', token);
+    // return res.sendStatus(200);
 };
 
 const getQrCode = async (req, res) => {
@@ -25,6 +37,6 @@ const getQrCode = async (req, res) => {
 };
 
 module.exports = {
-    getNumberPlate,
+    checkNumberPlate,
     getQrCode,
 };

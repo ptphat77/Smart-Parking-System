@@ -19,9 +19,12 @@ function route(app) {
     app.get('/booking/cancel', homeController.cancelBooking);
     app.get('/booking/status', homeController.bookingStatus);
 
+    // app.get('/parking/in', homeController.bookingRequest);
+    // app.get('/parking/out', homeController.cancelBooking);
+
     app.get('/balance', homeController.getBalance);
 
-    app.post('/qrcode', qrCodeController.getNumberPlate);
+    app.post('/qrcode', qrCodeController.checkNumberPlate);
     app.get('/qrcode', qrCodeController.getQrCode);
 
     app.get('/', checkUserJWT, homeController.getHomePage);

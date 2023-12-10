@@ -24,14 +24,13 @@
     function sleep(ms) {
         return new Promise((resolve) => setTimeout(resolve, ms));
     }
-    async function onScanSuccess(qrCodeMessage) {
-        document.getElementById('result').innerHTML = '<span class="result">' + qrCodeMessage + '</span>';
+    async function onScanSuccess(qrCodeToken) {
         await fetch(`http://localhost:3000/qrcode/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ data: 'qrCodeMessage' }),
+            body: JSON.stringify({ token: qrCodeToken }),
             // mode: 'no-cors',
         })
             .then((response) => {
@@ -40,7 +39,9 @@
                 }
                 return response.json();
             })
-            .then((data) => {
+            .then((numberPlate) => {
+                document.getElementById('result').innerHTML = '<span class="result">' + numberPlate + '</span>';
+
                 console.log('Success:', data);
             })
             .catch((error) => {
