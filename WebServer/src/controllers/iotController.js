@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 const slotService = require('../services/slotService');
 const userService = require('../services/userService');
 import { io } from '../server';
@@ -16,10 +18,30 @@ const updateFunc = async (req, res) => {
 const readFunc = async (req, res) => {
     const slotList = await slotService.getSlotList();
     const availability = await userService.getAvailability();
-    return res.status(200).json({slotList, availability});
+    return res.status(200).json({ slotList, availability });
+};
+
+const storeNumberPlate = async (req, res) => {
+    const numberPlate = req.body.numberPlate;
+
+    const fileName = 'numberPlate.txt';
+
+    const dataToWrite = numberPlate;
+
+    // Write number plate to file
+    fs.writeFile(fileName, dataToWrite, (err) => {
+        if (err) {
+            console.error(`Write Number Plate to ${fileName} failed!!!`, err);
+            return;
+        }
+        console.log(`Write Number Plate to ${fileName} successfully!!!`);
+    });
+
+    return res.status(200).json({ message: 'storeNumberPlate success!!!' });
 };
 
 module.exports = {
     updateFunc,
     readFunc,
+    storeNumberPlate,
 };

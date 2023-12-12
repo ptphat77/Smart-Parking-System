@@ -19,8 +19,9 @@ function route(app) {
     app.get('/booking/cancel', homeController.cancelBooking);
     app.get('/booking/status', homeController.bookingStatus);
 
-    // app.get('/parking/in', homeController.bookingRequest);
-    // app.get('/parking/out', homeController.cancelBooking);
+    // app.get('/gate/in', homeController.bookingRequest);
+    // app.get('/gate/out', homeController.cancelBooking);
+    app.post('/gate/store-number-plate', iotController.storeNumberPlate);
 
     app.get('/balance', homeController.getBalance);
 

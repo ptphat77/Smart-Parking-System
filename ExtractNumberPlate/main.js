@@ -5,7 +5,6 @@ const express = require('express');
 const NodeWebcam = require('node-webcam');
 require('dotenv').config();
 
-
 const app = express();
 const port = 4000;
 const numberPlateImgName = 'numberPlate';
@@ -29,7 +28,7 @@ const extractNumberPlate = async () => {
     try {
         const response = await axios.request(options);
         let numberPlate = response.data.value;
-        numberPlate = numberPlate.replace('\n', '-') // convert number plate 2 line to 1 line
+        numberPlate = numberPlate.replace('\n', '-'); // convert number plate 2 line to 1 line
         numberPlate = numberPlate.replace(/[^A-Z0-9\-\.]/g, ''); // remove invalid character
         console.log(numberPlate);
         return numberPlate;
@@ -43,7 +42,7 @@ const snapshot = async () => {
     const Webcam = await NodeWebcam.create({
         width: 1280,
         height: 720,
-        quality: 500,
+        quality: 1000,
         delay: 0,
         saveShots: true,
         output: 'png',
@@ -63,9 +62,32 @@ const snapshot = async () => {
 
 app.get('/extract', async (req, res) => {
     await snapshot();
+
     // Do không thể đồng bộ nên chờ 3s cho máy chụp
     setTimeout(async () => {
         const numberPlate = await extractNumberPlate();
+
+        // Send number plate to server
+        await fetch(`http://localhost:3000/gate/store-number-plate`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ numberPlate }),
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then((data) => {
+                console.log('Success:', data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+
         return res.send(`Extract successfully: ${numberPlate}`);
     }, 3000);
 });

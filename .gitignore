@@ -1,5 +1,6 @@
 /WebServer/node_modules/
 /WebServer/db.json
+/WebServer/numberPlate.txt
 
 /ExtractNumberPlate/node_modules/
 /ExtractNumberPlate/numberPlate.png
