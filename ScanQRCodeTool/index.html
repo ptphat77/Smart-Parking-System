@@ -39,7 +39,7 @@
                 }
                 return response.json();
             })
-            .then((numberPlate) => {
+            .then(({numberPlate}) => {
                 document.getElementById('result').innerHTML = '<span class="result">' + numberPlate + '</span>';
 
                 console.log('Success:', data);

@@ -1,23 +1,40 @@
+const fs = require('fs');
+
 const qrCode = require('qrcode');
 
 const qrService = require('../services/qrService');
 
+const readNumberPlateFile = async () => {
+    const fileName = 'numberPlate.txt';
+    let fileContent = fs.readFileSync(fileName, 'utf8', (err, data) => {
+        if (err) {
+            console.error(`Read ${fileName} file failed!!!`, err);
+            return;
+        }
+        return data;
+    });
+    return fileContent;
+};
+
 const checkNumberPlate = async (req, res) => {
     const token = req.body.token;
+
     const numberPlate = await qrService.getNumberPlateUser(token);
 
-    console.log(numberPlate);
+    // const isNumberPlateExists = await qrService.checkNumberPlateExists(numberPlate);
 
-    const isNumberPlateExists = await qrService.checkNumberPlateExists(numberPlate);
+    const numberPlateTxt = await readNumberPlateFile();
 
-    if (isNumberPlateExists) {
+
+    if (numberPlate === numberPlateTxt) {
         // Open door
+        console.log('Open door');
+    } else {
+        console.log('Number plates are not same');
     }
 
     // Announce to qr scan tool
-
-    // console.log('getNumberPlate: ', token);
-    // return res.sendStatus(200);
+    return res.status(200).json({ numberPlate });
 };
 
 const getQrCode = async (req, res) => {

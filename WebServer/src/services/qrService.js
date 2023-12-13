@@ -22,12 +22,12 @@ const getToken = async (username) => {
 };
 
 const checkNumberPlateExists = async (numberPlate) => {
-    const isNumberPlateExists = CheckNumberPlate.findOneAndDelete({ numberPlate });
+    const isNumberPlateExists = await CheckNumberPlate.findOneAndDelete({ numberPlate });
     return isNumberPlateExists;
 };
 
 const getNumberPlateUser = async (token) => {
-    const data = CheckNumberPlate.findOne({ token }, 'numberPlate');
+    const data = await User.findOne({ token }, 'numberPlate');
     return data.numberPlate;
 };
 
