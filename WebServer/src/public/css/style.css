@@ -42,3 +42,7 @@ body {
     margin-left: 110px;
     margin-right: 110px;
 } */
+
+#map {
+    height: 90vh;
+}

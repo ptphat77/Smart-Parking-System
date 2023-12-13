@@ -2,6 +2,19 @@
 <html lang="en">
     <head>
         <%- include('layouts/head.ejs') %>
+
+        <!-- Leaflet.js cdn -->
+        <link
+            rel="stylesheet"
+            href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+            integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+            crossorigin=""
+        />
+        <script
+            src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""
+        ></script>
     </head>
     <body>
         <div class="background">
@@ -67,9 +80,13 @@
                 </div>
             </div>
 
-            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <!-- <div class="alert alert-warning alert-dismissible fade show" role="alert">
                 <strong>Holy guacamole!</strong> You should check in on some of those fields below.
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div> -->
+            
+            <div class="container">
+                <div id="map"></div>
             </div>
 
             <!-- Modal -->
@@ -91,6 +108,8 @@
                 </div>
             </div>
         </div>
+
+        <script src="main.js"></script>
 
         <script src="/socket.io/socket.io.js"></script>
         <script>
