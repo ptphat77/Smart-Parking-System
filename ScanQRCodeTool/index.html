@@ -25,6 +25,10 @@
         return new Promise((resolve) => setTimeout(resolve, ms));
     }
     async function onScanSuccess(qrCodeToken) {
+        console.log('qrCodeToken: ', qrCodeToken);
+
+        html5QrcodeScanner.clear();
+
         await fetch(`http://localhost:3000/qrcode/`, {
             method: 'POST',
             headers: {
@@ -39,15 +43,18 @@
                 }
                 return response.json();
             })
-            .then(({numberPlate}) => {
-                document.getElementById('result').innerHTML = '<span class="result">' + numberPlate + '</span>';
+            .then((data) => {
+                if (data.username) {
+                    document.getElementById('result').innerHTML = '<span class="result">' + data.username + '</span>';
+                } else {
+                    document.getElementById('result').innerHTML = '<span class="result">' + data.message + '</span>';
+                }
 
                 console.log('Success:', data);
             })
             .catch((error) => {
                 console.error('Error:', error);
             });
-        html5QrcodeScanner.clear();
     }
 
     async function onScanError(errorMessage) {

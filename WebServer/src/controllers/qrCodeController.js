@@ -16,31 +16,34 @@ const readNumberPlateFile = async () => {
     return fileContent;
 };
 
-const checkNumberPlate = async (req, res) => {
+const checkUsername = async (req, res) => {
     const token = req.body.token;
 
-    const numberPlate = await qrService.getNumberPlateUser(token);
+    const username = await qrService.getUsername(token);
 
-    // const isNumberPlateExists = await qrService.checkNumberPlateExists(numberPlate);
+    if (username) {
+        // Payment if booking
 
-    const numberPlateTxt = await readNumberPlateFile();
+        // Snapshot
 
-
-    if (numberPlate === numberPlateTxt) {
         // Open door
-        console.log('Open door');
-    } else {
-        console.log('Number plates are not same');
-    }
+        await fetch(process.env.IOT_URL).then((resoponse) => {
+            if (resoponse.status === 200) {
+                console.log('Open gate successfully');
+            }
+        });
 
-    // Announce to qr scan tool
-    return res.status(200).json({ numberPlate });
+        // Announce to qr scan tool
+        return res.status(200).json({ username });
+    } else {
+        return res.status(200).json({ message: 'Not found user name' });
+    }
 };
 
 const getQrCode = async (req, res) => {
-    const isParking = req.session.info.isParking;
+    const userStatus = req.session.info.userStatus;
 
-    if (isParking) {
+    if (userStatus !== 2) {
         const username = req.session.info.username;
 
         const token = await qrService.createToken(username);
@@ -54,6 +57,6 @@ const getQrCode = async (req, res) => {
 };
 
 module.exports = {
-    checkNumberPlate,
+    checkUsername,
     getQrCode,
 };

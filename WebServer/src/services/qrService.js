@@ -7,7 +7,7 @@ const createToken = async (username) => {
     const token = randomstring.generate({
         length: 32,
     });
-    await User.updateOne({ username, isParking: true }, { token });
+    await User.updateOne({ username }, { token });
 
     return token;
 };
@@ -26,9 +26,9 @@ const checkNumberPlateExists = async (numberPlate) => {
     return isNumberPlateExists;
 };
 
-const getNumberPlateUser = async (token) => {
-    const data = await User.findOne({ token }, 'numberPlate');
-    return data.numberPlate;
+const getUsername = async (token) => {
+    const data = await User.findOne({ token }, 'username');
+    return data?.username;
 };
 
 module.exports = {
@@ -36,5 +36,5 @@ module.exports = {
     removeToken,
     getToken,
     checkNumberPlateExists,
-    getNumberPlateUser,
+    getUsername,
 };

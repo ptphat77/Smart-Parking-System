@@ -1,15 +1,16 @@
+// Init map
+var map = L.map('map').setView([10.869484, 106.803428], 21);
+
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 21,
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    autoClose: false,
+}).addTo(map);
+
+// Add marker to map
 const loadMap = (slotList) => {
-    var map = L.map('map').setView([10.869484, 106.803428], 21);
-
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 21,
-        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-        autoClose: false,
-    }).addTo(map);
-
     const markerList = [];
 
-    // Duyệt qua danh sách tọa độ và tạo marker với popup tại mỗi điểm
     slotList.forEach((slot) => {
         if (slot.isBlank) {
             coord = JSON.parse(slot.coord);
