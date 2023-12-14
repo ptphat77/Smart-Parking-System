@@ -51,9 +51,9 @@
                 </div>
             </div>
 
-            <!-- Your booking -->
+            <!-- Your action -->
             <div class="container">
-                <h2>Your booking</h2>
+                <h2>Your action</h2>
                 <div class="booking__container">
                     <!-- Booking button -->
                     <button
@@ -109,10 +109,11 @@
             </div>
         </div>
 
-        <script src="main.js"></script>
+        <script src="map.js"></script>
 
         <script src="/socket.io/socket.io.js"></script>
         <script>
+            let slotListFE = [];
             const renderSlotStatus = (slotStatus) => {
                 const slotAvailability = document.querySelector('.slot__availability');
                 const slotContainer = document.querySelector('.slot__container .row');
@@ -137,7 +138,9 @@
                 const slotBtns = document.querySelectorAll('.slot__container .slot__item');
 
                 // Show slot availability
-                slotAvailability.innerHTML = `${slotStatus.slotList.length-slotStatus.unavailable}/${slotStatus.slotList.length}`;
+                slotAvailability.innerHTML = `${slotStatus.slotList.length - slotStatus.unavailable}/${
+                    slotStatus.slotList.length
+                }`;
             };
 
             const fetchSlotStatus = async () => {
@@ -197,7 +200,7 @@
                         switch (userStatus) {
                             case 0:
                                 document.querySelector('.booking-request__btn').hidden = false;
-                                document.querySelector('.cancel-booking__btn').hidden = true
+                                document.querySelector('.cancel-booking__btn').hidden = true;
                                 break;
                             case 1:
                                 document.querySelector('.cancel-booking__btn').hidden = false;

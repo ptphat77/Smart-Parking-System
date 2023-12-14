@@ -6,7 +6,6 @@ import { io } from '../server';
 
 const checkUsername = async (req, res) => {
     const token = req.body.token;
-    console.log('working 1 ');
 
     const userInfo = await qrService.getUserInfoByToken(token);
 
@@ -15,7 +14,6 @@ const checkUsername = async (req, res) => {
     if (username) {
         // Payment if booking
         if (userInfo.userStatus === 1) {
-            console.log('payment ');
             await userService.paymentBooking(username);
             const userStatus = 2;
             await userService.setUserStatus(username, userStatus);
@@ -25,7 +23,6 @@ const checkUsername = async (req, res) => {
 
         // Snapshot
         qrService.snapshot(username);
-        
 
         // Open door
         // await fetch(process.env.IOT_URL).then((resoponse) => {

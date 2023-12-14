@@ -21,10 +21,8 @@ const getToken = async (username) => {
 };
 
 const getUserInfoByToken = async (token) => {
-    console.log('getUserInfoByToken1');
-
     const data = await User.findOne({ token }, 'username userStatus');
-    console.log('getUserInfoByToken2');
+
     if (data) {
         return data;
     } else {

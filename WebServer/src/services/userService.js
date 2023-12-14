@@ -20,7 +20,7 @@ const paymentBooking = async (username) => {
     // price = 1 VND/s
     const price = 1;
 
-    await User.findOneAndUpdate({ username }, { $inc: { balance: -(price * time) }, startTime: null });
+    await User.findOneAndUpdate({ username }, { $inc: { balance: -(price * time) }, startTime: Date.now() });
 };
 
 const getUserStatus = async (username) => {
