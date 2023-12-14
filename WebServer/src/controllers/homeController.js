@@ -33,9 +33,9 @@ const bookingRequest = async (req, res) => {
 const bookingStatus = async (req, res) => {
     try {
         const username = req.session.info.username;
-        const isParking = await userService.getIsParking(username);
+        const userStatus = await userService.getUserStatus(username);
 
-        return res.status(200).json(isParking);
+        return res.status(200).json(userStatus);
     } catch (error) {
         console.log('>>> Controller error:', error);
     }

@@ -23,9 +23,9 @@ const paymentBooking = async (username) => {
     await User.findOneAndUpdate({ username }, { $inc: { balance: -(price * time) }, startTime: null });
 };
 
-const getIsParking = async (username) => {
-    const data = await User.findOne({ username }, 'isParking');
-    return data.isParking;
+const getUserStatus = async (username) => {
+    const data = await User.findOne({ username }, 'userStatus');
+    return data.userStatus;
 };
 
 const getBalanceUser = async (username) => {
@@ -36,7 +36,7 @@ const getBalanceUser = async (username) => {
 module.exports = {
     getAvailability,
     setIsParking,
-    getIsParking,
+    getUserStatus,
     setCreatedAtToken,
     paymentBooking,
     getBalanceUser

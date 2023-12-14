@@ -193,13 +193,20 @@
                     .then((resoponse) => {
                         return resoponse.json();
                     })
-                    .then(async (isParking) => {
-                        if (isParking) {
-                            document.querySelector('.cancel-booking__btn').hidden = false;
-                            document.querySelector('.booking-request__btn').hidden = true;
-                        } else {
-                            document.querySelector('.booking-request__btn').hidden = false;
-                            document.querySelector('.cancel-booking__btn').hidden = true;
+                    .then(async (userStatus) => {
+                        switch (userStatus) {
+                            case 0:
+                                document.querySelector('.booking-request__btn').hidden = false;
+                                document.querySelector('.cancel-booking__btn').hidden = true
+                                break;
+                            case 1:
+                                document.querySelector('.cancel-booking__btn').hidden = false;
+                                document.querySelector('.booking-request__btn').hidden = true;
+                                break;
+                            case 2:
+                                document.querySelector('.cancel-booking__btn').hidden = false;
+                                document.querySelector('.booking-request__btn').hidden = true;
+                                document.querySelector('.cancel-booking__btn').disabled = true;
                         }
                     });
             };

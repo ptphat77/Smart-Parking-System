@@ -2,5 +2,6 @@
 /WebServer/db.json
 /WebServer/numberPlate.txt
 
-/ExtractNumberPlate/node_modules/
-/ExtractNumberPlate/numberPlate.png
+/Snapshot/node_modules/
+
+/carInfoImg/
