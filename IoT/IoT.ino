@@ -8,7 +8,7 @@
 #include <ESP8266WebServer.h>
 ESP8266WebServer webServer(80);
 
-LiquidCrystal_I2C lcd(0x27,16,2); // có thể khác: 0x3F
+LiquidCrystal_I2C lcd(0x3F,16,2); // có thể khác: 0x3F
 
 int servo = D6;
 Servo myServo;
@@ -19,9 +19,8 @@ const char *ssid = "UIT Public";                          // Enter your WIFI ssi
 const char *password = "";                                // Enter your WIFI password
 const char *server_url = "http://10.45.50.231:3000/iot/"; // Nodejs application endpoint
 
-StaticJsonDocument<2048> signalGate;
 StaticJsonDocument<2048> iotData;
-JsonArray sensorData = iotData.createNestedArray("data");
+
 
 // Set up the client objet
 WiFiClient client;
@@ -48,9 +47,10 @@ void setup()
         Serial.print(".");
     }
     Serial.println("WiFi connected");
+    Serial.println(WiFi.localIP());
     delay(3000);
     //-------------
-    webServer.on("/", openGate);
+    webServer.on("/opengate", openGate);
     webServer.begin();
     //------------
     lcd.init(); //Khởi tạo màn hình LCD
@@ -59,7 +59,7 @@ void setup()
     Serial.begin(9600);
     myServo.attach(servo);
     //--------------
-  }
+}
 
 void getSensorData()
 {
@@ -80,31 +80,18 @@ void getSensorData()
 
 void sendData()
 {
-    //    for (size_t i = 0; i < dataArrSize; i++)
-    //    {
-    //        Serial.println(preDataArr[i]);
-    //    }
-    //    for (size_t i = 0; i < dataArrSize; i++)
-    //    {
-    //        Serial.println(dataArr[i]);
-    //    }
-    //
+    JsonArray sensorArray = iotData.createNestedArray("data");
 
-    
-    // Chuẩn bị dữ liệu gởi đi - sensorData[]
-    // 0: Có vật cản
-    // 1: Không có vật cản
-    // 2: Tín hiệu Sensor bị lỗi
-    // -1: Trạng thái không đổi so với trước đó.
     bool equalPreData = true;
     for (size_t i = 0; i < dataArrSize; i++)
     {
-        if(preDataArr[i] == dataArr[i])
-            sensorData[i] = -1; // Nếu giá trị = -1 thì không push.
-        else{
-            sensorData[i] = dataArr[i];
-            equalPreData = false; // dataArr != preDataArr
-        }    
+        if(preDataArr[i] != dataArr[i]){
+            JsonObject sensorData = sensorArray.createNestedObject();
+            sensorData["sensorNumber"] = i;
+            sensorData["isBlank"] = (bool) dataArr[i];
+
+            equalPreData = false;
+        }  
     }
 
     if(equalPreData == true) // Nếu dataArr trùng với preDataArr thì không gởi
@@ -114,6 +101,7 @@ void sendData()
       
     String jsonString;
     serializeJson(iotData, jsonString);
+    iotData.clear();
 
     Serial.print("\njson string: ");
     Serial.print(jsonString);
@@ -146,82 +134,52 @@ void sendData()
     return;
 }
 
-void sendSignalGate()
-{
-    if(digitalRead(Gate_sensor) == 1 || isSendDataGateSensor == 1)
-    return;
-
-    http.begin(client, server_url);
-    http.addHeader("Content-Type", "application/json");
-    int httpCode = http.POST("{'isClient':true}");
-
-    if (httpCode > 0)
-    {
-        if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY)
-        {
-            Serial.print("\nResponse: Success!");
-            isSendDataGateSensor = 1;
-        }  
-        else
-            Serial.print("\nResponse: Failed!");
-    }
-    else
-    {
-        Serial.printf("\n[HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
-        http.end();
-    }
-    http.end();
-}
-
 void displayScreenLed()
 {
-        int slot = 0;
-        for (size_t i = 0; i < dataArrSize; i++)
-            if(dataArr[i] == 1)
-            slot += 1;
-        
-        // In ra màn led
-        if(slot != 0)
-        {
-        lcd.clear();
-        lcd.setCursor(0,0);
-        lcd.print("    WELCOME!    ");
-        lcd.setCursor (0,1);
-        lcd.print("Slot Left: ");
-        lcd.print(slot);
+    int slot = 0;
+    for (size_t i = 0; i < dataArrSize; i++)
+        if(dataArr[i] == 1)
+        slot += 1;
+    
+    // In ra màn led
+    if(slot != 0)
+    {
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("    WELCOME!    ");
+    lcd.setCursor (0,1);
+    lcd.print("Slot Left: ");
+    lcd.print(slot);
     } 
     else{
-        lcd.clear();
-        lcd.setCursor(0,0);
-        lcd.print("    SORRY :(    ");  
-        lcd.setCursor (0,1);
-        lcd.print("  Parking Full  "); 
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("    SORRY :(    ");  
+    lcd.setCursor (0,1);
+    lcd.print("  Parking Full  "); 
     } 
 }
 
 void openGate()
 {
-    String act_state = webServer.arg("state");
-    if(act_state == "1")
+    webServer.send(200, "text/html", "ok");
+
+    Serial.println("Trong ham openGate");
+    Serial.println(digitalRead(Gate_sensor));
+    while(digitalRead(Gate_sensor) == 0)
     {
-        while(digitalRead(Gate_sensor) == 0)
-        {
         myServo.write(0);
         delay(1000);
-        }
-    }
-    
+    }   
     myServo.write(90);
     delay(2000);
-    isSendDataGateSensor = 0;
+    
 }
 
 void loop()
 {
     getSensorData();
     sendData();
-    sendSignalGate();
-
     webServer.handleClient(); // handle incoming client requests.
     //delay(1000);
 }
