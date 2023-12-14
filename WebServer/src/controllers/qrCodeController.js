@@ -50,11 +50,20 @@ const getImage = async (req, res) => {
         console.log('__dirname:', __dirname);
         const imgPath = `../carInfoImg/${imgName}.png`;
         let imgSrc = '';
-        
-        // Get the image
-        const buffer = fs.readFileSync(imgPath);
-        const base64Image = Buffer.from(buffer).toString('base64');
-        imgSrc = `data:image/jpeg;base64,${base64Image}`;
+
+        try {
+            // Get the image
+            const buffer = fs.readFileSync(imgPath);
+            const base64Image = Buffer.from(buffer).toString('base64');
+            imgSrc = `data:image/jpeg;base64,${base64Image}`;
+        } catch (error) {
+            if (error.code === 'ENOENT') {
+                console.error('Đường dẫn không tồn tại hoặc tệp không được tìm thấy.');
+            } else {
+                console.error('Lỗi khi đọc tệp ảnh:', error);
+            }
+            return res.status(200).json({ message: 'Not found image' });
+        }
 
         return res.status(200).json({ imgSrc });
     } else {
