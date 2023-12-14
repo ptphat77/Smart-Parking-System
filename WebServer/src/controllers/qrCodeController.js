@@ -1,4 +1,5 @@
 const qrCode = require('qrcode');
+const fs = require('fs');
 
 const qrService = require('../services/qrService');
 const userService = require('../services/userService');
@@ -34,7 +35,30 @@ const checkUsername = async (req, res) => {
         // Announce to qr scan tool
         return res.status(200).json({ username });
     } else {
-        return res.status(200).json({ message: 'Not found user name' });
+        return res.status(200).json({ message: 'Not found username' });
+    }
+};
+
+const getImage = async (req, res) => {
+    const token = req.body.token;
+
+    const userInfo = await qrService.getUserInfoByToken(token);
+
+    const imgName = userInfo.imgName;
+
+    if (imgName) {
+        console.log('__dirname:', __dirname);
+        const imgPath = `../carInfoImg/${imgName}.png`;
+        let imgSrc = '';
+        
+        // Get the image
+        const buffer = fs.readFileSync(imgPath);
+        const base64Image = Buffer.from(buffer).toString('base64');
+        imgSrc = `data:image/jpeg;base64,${base64Image}`;
+
+        return res.status(200).json({ imgSrc });
+    } else {
+        return res.status(200).json({ message: 'Not found image' });
     }
 };
 
@@ -57,4 +81,5 @@ const getQrCode = async (req, res) => {
 module.exports = {
     checkUsername,
     getQrCode,
+    getImage,
 };

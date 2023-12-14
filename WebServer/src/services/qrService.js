@@ -21,7 +21,7 @@ const getToken = async (username) => {
 };
 
 const getUserInfoByToken = async (token) => {
-    const data = await User.findOne({ token }, 'username userStatus');
+    const data = await User.findOne({ token }, 'username userStatus imgName');
 
     if (data) {
         return data;

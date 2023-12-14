@@ -24,7 +24,8 @@ function route(app) {
 
     app.get('/balance', homeController.getBalance);
 
-    app.post('/qrcode', qrCodeController.checkUsername);
+    app.post('/qrcode/go-in', qrCodeController.checkUsername);
+    app.post('/qrcode/go-out', qrCodeController.getImage);
     app.get('/qrcode', qrCodeController.getQrCode);
 
     app.get('/', checkUserJWT, homeController.getHomePage);
