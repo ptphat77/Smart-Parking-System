@@ -1,5 +1,3 @@
-const fs = require('fs');
-
 const slotService = require('../services/slotService');
 const userService = require('../services/userService');
 import { io } from '../server';

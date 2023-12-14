@@ -1,13 +1,11 @@
 const axios = require('axios');
-const fs = require('fs');
-const FormData = require('form-data');
 const express = require('express');
 const NodeWebcam = require('node-webcam');
 require('dotenv').config();
 
 const app = express();
 const port = 4000;
-const carInfoImgName = 'numberPlate';
+const carInfoImgName = '../carInfoImg/numberPlate.png';
 
 const snapshot = async () => {
     // Create webcam instance with specified settings
@@ -17,7 +15,6 @@ const snapshot = async () => {
         quality: 300,
         delay: 0,
         saveShots: true,
-        output: 'png',
         device: false,
         callbackReturn: 'buffer',
     });
@@ -32,9 +29,9 @@ const snapshot = async () => {
     });
 };
 
-app.get('/extract', async (req, res) => {
+app.get('/snapshot', async (req, res) => {
     await snapshot();
-
+    return res.send('Snapshot successfully!!!');
 });
 
 app.listen(port, () => {

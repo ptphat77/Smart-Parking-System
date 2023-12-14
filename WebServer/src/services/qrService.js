@@ -16,18 +16,25 @@ const removeToken = async (username) => {
 };
 
 const getToken = async (username) => {
-    const data = await User.findOne({ username }, 'token');
-    return data.token;
+    const { token } = await User.findOne({ username }, 'token');
+    return token;
 };
 
-const getUsername = async (token) => {
-    const data = await User.findOne({ token }, 'username');
-    return data?.username;
+const getUserInfoByToken = async (token) => {
+    console.log("getUserInfoByToken1");
+
+    const data = await User.findOne({ token }, 'username userStatus');
+    console.log("getUserInfoByToken2");
+    if(data) {
+        return data;
+    } else {
+        return null;
+    }
 };
 
 module.exports = {
     createToken,
     removeToken,
     getToken,
-    getUsername,
+    getUserInfoByToken,
 };
