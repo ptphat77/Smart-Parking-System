@@ -17,12 +17,12 @@ const getHomePage = async (req, res) => {
 const bookingRequest = async (req, res) => {
     try {
         const username = req.session.info.username;
-        const isParking = true;
-        await userService.setIsParking(username, isParking);
-        await userService.setCreatedAtToken(username);
+        const userStatus = 1;
+        await userService.setUserStatus(username, userStatus);
+        await userService.setStartTime(username);
 
         io.emit('fetch slot data', 'Broadcast success!!!');
-        req.session.info.isParking = isParking;
+        req.session.info.userStatus = userStatus;
 
         return res.status(200).json('success');
     } catch (error) {
@@ -44,12 +44,12 @@ const bookingStatus = async (req, res) => {
 const cancelBooking = async (req, res) => {
     try {
         const username = req.session.info.username;
-        const isParking = false;
+        const userStatus = 0;
         await userService.paymentBooking(username);
-        await userService.setIsParking(username, isParking);
+        await userService.setUserStatus(username, userStatus);
 
         io.emit('fetch slot data', 'Broadcast success!!!');
-        req.session.info.isParking = isParking;
+        req.session.info.userStatus = userStatus;
 
         return res.status(200).json('success');
     } catch (error) {

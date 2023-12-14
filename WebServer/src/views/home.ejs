@@ -137,7 +137,7 @@
                 const slotBtns = document.querySelectorAll('.slot__container .slot__item');
 
                 // Show slot availability
-                slotAvailability.innerHTML = `${slotStatus.availability}/${slotStatus.slotList.length}`;
+                slotAvailability.innerHTML = `${slotStatus.slotList.length-slotStatus.unavailable}/${slotStatus.slotList.length}`;
             };
 
             const fetchSlotStatus = async () => {

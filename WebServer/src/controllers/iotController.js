@@ -17,8 +17,8 @@ const updateFunc = async (req, res) => {
 
 const readFunc = async (req, res) => {
     const slotList = await slotService.getSlotList();
-    const availability = await userService.getAvailability();
-    return res.status(200).json({ slotList, availability });
+    const unavailable = await userService.getUnavailable();
+    return res.status(200).json({ slotList, unavailable });
 };
 
 const storeNumberPlate = async (req, res) => {

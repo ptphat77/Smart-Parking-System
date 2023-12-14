@@ -1,15 +1,15 @@
 const User = require('../models/User');
 
-const getAvailability = async () => {
-    const availability = await User.countDocuments({ isParking: true });
-    return availability;
+const getUnavailable = async () => {
+    const unavailable = await User.countDocuments({ userStatus: { $ne: 0 } });
+    return unavailable;
 };
 
-const setIsParking = async (username, value) => {
-    await User.updateOne({ username }, { isParking: value });
+const setUserStatus = async (username, value) => {
+    await User.updateOne({ username }, { userStatus: value });
 };
 
-const setCreatedAtToken = async (username) => {
+const setStartTime = async (username) => {
     await User.updateOne({ username }, { startTime: Date.now() });
 };
 
@@ -34,10 +34,10 @@ const getBalanceUser = async (username) => {
 };
 
 module.exports = {
-    getAvailability,
-    setIsParking,
+    getUnavailable,
+    setUserStatus,
     getUserStatus,
-    setCreatedAtToken,
+    setStartTime,
     paymentBooking,
     getBalanceUser
 };

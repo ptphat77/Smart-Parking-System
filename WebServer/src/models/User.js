@@ -8,7 +8,7 @@ const User = new Schema({
     balance: { type: Number, require: true, default: 0 },
     token: { type: String, default: null },
     startTime: { type: String, default: null },
-    userStatus: { type: Number, default: 0 },
+    userStatus: { type: Number, default: 0 }, // 0 = outside parking, 1 = booking, 2 = inside parking
 });
 
 module.exports = mongoose.model('User', User);
