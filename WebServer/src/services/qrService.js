@@ -21,15 +21,35 @@ const getToken = async (username) => {
 };
 
 const getUserInfoByToken = async (token) => {
-    console.log("getUserInfoByToken1");
+    console.log('getUserInfoByToken1');
 
     const data = await User.findOne({ token }, 'username userStatus');
-    console.log("getUserInfoByToken2");
-    if(data) {
+    console.log('getUserInfoByToken2');
+    if (data) {
         return data;
     } else {
         return null;
     }
+};
+
+const snapshot = async (username) => {
+    const imgName = randomstring.generate({
+        length: 16,
+    });
+
+    await User.updateOne({ username }, { imgName });
+
+    await fetch(process.env.SNAPSHOT_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ imgName }),
+    }).then((resoponse) => {
+        if (resoponse.status === 200) {
+            console.log('Snapshot successfully');
+        }
+    });
 };
 
 module.exports = {
@@ -37,4 +57,5 @@ module.exports = {
     removeToken,
     getToken,
     getUserInfoByToken,
+    snapshot,
 };

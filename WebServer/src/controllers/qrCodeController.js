@@ -24,11 +24,8 @@ const checkUsername = async (req, res) => {
         }
 
         // Snapshot
-        await fetch(process.env.SNAPSHOT_URL).then((resoponse) => {
-            if (resoponse.status === 200) {
-                console.log('Snapshot successfully');
-            }
-        });
+        qrService.snapshot(username);
+        
 
         // Open door
         // await fetch(process.env.IOT_URL).then((resoponse) => {

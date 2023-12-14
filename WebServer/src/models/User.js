@@ -9,6 +9,7 @@ const User = new Schema({
     token: { type: String, default: null },
     startTime: { type: String, default: null },
     userStatus: { type: Number, default: 0 }, // 0 = outside parking, 1 = booking, 2 = inside parking
+    imgName: { type: String, default: null },
 });
 
 module.exports = mongoose.model('User', User);

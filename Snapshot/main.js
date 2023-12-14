@@ -5,9 +5,17 @@ require('dotenv').config();
 
 const app = express();
 const port = 4000;
-const carInfoImgName = '../carInfoImg/numberPlate.png';
 
-const snapshot = async () => {
+
+app.use(
+    express.urlencoded({
+        extended: true,
+    }),
+);
+app.use(express.json());
+
+const snapshot = async (imgName) => {
+    imgNameDir = `../carInfoImg/${imgName}.png`
     // Create webcam instance with specified settings
     const Webcam = await NodeWebcam.create({
         width: 1280,
@@ -20,7 +28,7 @@ const snapshot = async () => {
     });
 
     // Take a photo
-    await Webcam.capture(carInfoImgName, (err, data) => {
+    await Webcam.capture(imgNameDir, (err, data) => {
         if (err) {
             console.error(err);
         } else {
@@ -29,8 +37,10 @@ const snapshot = async () => {
     });
 };
 
-app.get('/snapshot', async (req, res) => {
-    await snapshot();
+app.post('/snapshot', async (req, res) => {
+    const imgName = req.body.imgName;
+    console.log("snapshot working: ", imgName);
+    await snapshot(imgName);
     return res.send('Snapshot successfully!!!');
 });
 
