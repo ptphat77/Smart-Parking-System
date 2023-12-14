@@ -1,7 +1,6 @@
 const randomstring = require('randomstring');
 
 const User = require('../models/User');
-const CheckNumberPlate = require('../models/CheckNumberPlate');
 
 const createToken = async (username) => {
     const token = randomstring.generate({
@@ -21,11 +20,6 @@ const getToken = async (username) => {
     return data.token;
 };
 
-const checkNumberPlateExists = async (numberPlate) => {
-    const isNumberPlateExists = await CheckNumberPlate.findOneAndDelete({ numberPlate });
-    return isNumberPlateExists;
-};
-
 const getUsername = async (token) => {
     const data = await User.findOne({ token }, 'username');
     return data?.username;
@@ -35,6 +29,5 @@ module.exports = {
     createToken,
     removeToken,
     getToken,
-    checkNumberPlateExists,
     getUsername,
 };

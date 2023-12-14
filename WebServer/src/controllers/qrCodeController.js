@@ -1,20 +1,6 @@
-const fs = require('fs');
-
 const qrCode = require('qrcode');
 
 const qrService = require('../services/qrService');
-
-const readNumberPlateFile = async () => {
-    const fileName = 'numberPlate.txt';
-    let fileContent = fs.readFileSync(fileName, 'utf8', (err, data) => {
-        if (err) {
-            console.error(`Read ${fileName} file failed!!!`, err);
-            return;
-        }
-        return data;
-    });
-    return fileContent;
-};
 
 const checkUsername = async (req, res) => {
     const token = req.body.token;

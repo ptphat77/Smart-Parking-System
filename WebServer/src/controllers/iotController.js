@@ -21,27 +21,8 @@ const readFunc = async (req, res) => {
     return res.status(200).json({ slotList, unavailable });
 };
 
-const storeNumberPlate = async (req, res) => {
-    const numberPlate = req.body.numberPlate;
-
-    const fileName = 'numberPlate.txt';
-
-    const dataToWrite = numberPlate;
-
-    // Write number plate to file
-    fs.writeFile(fileName, dataToWrite, (err) => {
-        if (err) {
-            console.error(`Write Number Plate to ${fileName} failed!!!`, err);
-            return;
-        }
-        console.log(`Write Number Plate to ${fileName} successfully!!!`);
-    });
-
-    return res.status(200).json({ message: 'storeNumberPlate success!!!' });
-};
 
 module.exports = {
     updateFunc,
     readFunc,
-    storeNumberPlate,
 };
