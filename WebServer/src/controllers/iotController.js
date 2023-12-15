@@ -3,6 +3,7 @@ const userService = require('../services/userService');
 import { io } from '../server';
 
 const updateFunc = async (req, res) => {
+    console.log("req.body: " + req.body.data[0].isBlank);
     if (req.body.errorCode == 0) {
         await slotService.updateSlotBlank(req.body.data);
 

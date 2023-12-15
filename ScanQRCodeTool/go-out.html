@@ -50,8 +50,6 @@
             });
     };
     async function onScanSuccess(qrCodeToken) {
-        console.log('qrCodeToken: ', qrCodeToken);
-
         html5QrcodeScanner.clear();
 
         await fetch(`http://localhost:3000/qrcode/go-out`, {

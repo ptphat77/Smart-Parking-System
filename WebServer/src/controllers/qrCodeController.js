@@ -5,6 +5,14 @@ const qrService = require('../services/qrService');
 const userService = require('../services/userService');
 import { io } from '../server';
 
+const openGate = async () => {
+    await fetch(process.env.IOT_URL).then((resoponse) => {
+        if (resoponse.status === 200) {
+            console.log('Open gate successfully');
+        }
+    });
+};
+
 const checkUsername = async (req, res) => {
     const token = req.body.token;
 
@@ -25,12 +33,8 @@ const checkUsername = async (req, res) => {
         // Snapshot
         qrService.snapshot(username);
 
-        // Open door
-        // await fetch(process.env.IOT_URL).then((resoponse) => {
-        //     if (resoponse.status === 200) {
-        //         console.log('Open gate successfully');
-        //     }
-        // });
+        // Open gate
+        // openGate();
 
         // Announce to qr scan tool
         return res.status(200).json({ username });
@@ -79,6 +83,9 @@ const openExitDoor = async (req, res) => {
     await userService.setUserStatus(username, userStatus);
 
     io.emit('fetch slot data', 'Broadcast success!!!');
+
+    // Open gate
+    // openGate();
 };
 
 const getQrCode = async (req, res) => {

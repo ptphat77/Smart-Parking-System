@@ -1,19 +1,19 @@
-// Init map
-var map = L.map('map').setView([10.869484, 106.803428], 21);
-
-L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 21,
-    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-    autoClose: false,
-}).addTo(map);
-
 // Add marker to map
 const loadMap = (slotList) => {
+    // Init map
+    var map = L.map('map').setView(JSON.parse(slotList[0].coord), 21);
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 21,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        autoClose: false,
+    }).addTo(map);
+
     const markerList = [];
 
     slotList.forEach((slot) => {
         if (slot.isBlank) {
-            coord = JSON.parse(slot.coord);
+            const coord = JSON.parse(slot.coord);
             const marker = L.marker(coord).addTo(map);
             marker.bindPopup(`Slot ${slot.slotNumber}`);
             markerList.push(marker);

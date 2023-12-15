@@ -11,13 +11,17 @@ const getSlotList = async () => {
 
 const updateSlotBlank = async (sensorData) => {
     try {
-        for (let [index, value] of sensorData.entries()) {
-            if (value) {
-                await Slot.updateOne({ slotNumber: index }, { isBlank: value });
-            } else {
-                await Slot.updateOne({ slotNumber: index }, { isBlank: value, isBooked: false });
-            }
-        }
+        // for (let [index, value] of sensorData.entries()) {
+        //     if (value) {
+        //         await Slot.updateOne({ slotNumber: index }, { isBlank: value });
+        //     } else {
+        //         await Slot.updateOne({ slotNumber: index }, { isBlank: value, isBooked: false });
+        //     }
+        // }
+        sensorData.forEach(async (data) => {
+            console.log("data:", data);
+            await Slot.updateOne({ slotNumber: data.sensorNumber }, { isBlank: data.isBlank });
+        });
     } catch (error) {
         console.log('>>> Service error:', error);
     }
