@@ -23,6 +23,16 @@ const paymentBooking = async (username) => {
     await User.findOneAndUpdate({ username }, { $inc: { balance: -(price * time) }, startTime: Date.now() });
 };
 
+const paymentParking = async (username) => {
+    const data = await User.findOne({ username }, 'startTime');
+
+    const time = Math.round((( Date.now() - data.startTime ) / 1000));
+    // price = 1 VND/s
+    const price = 0.5;
+
+    await User.findOneAndUpdate({ username }, { $inc: { balance: -(price * time) }, startTime: null});
+};
+
 const getUserStatus = async (username) => {
     const data = await User.findOne({ username }, 'userStatus');
     return data.userStatus;
@@ -39,5 +49,6 @@ module.exports = {
     getUserStatus,
     setStartTime,
     paymentBooking,
-    getBalanceUser
+    getBalanceUser,
+    paymentParking
 };

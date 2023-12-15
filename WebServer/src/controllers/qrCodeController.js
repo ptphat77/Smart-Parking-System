@@ -45,9 +45,9 @@ const getImage = async (req, res) => {
     const userInfo = await qrService.getUserInfoByToken(token);
 
     const imgName = userInfo.imgName;
+    const username = userInfo.username;
 
     if (imgName) {
-        console.log('__dirname:', __dirname);
         const imgPath = `../carInfoImg/${imgName}.png`;
         let imgSrc = '';
 
@@ -65,10 +65,20 @@ const getImage = async (req, res) => {
             return res.status(200).json({ message: 'Not found image' });
         }
 
-        return res.status(200).json({ imgSrc });
+        return res.status(200).json({ imgSrc, username });
     } else {
         return res.status(200).json({ message: 'Not found image' });
     }
+};
+
+const openExitDoor = async (req, res) => {
+    const username = req.body.username;
+    // Payment parking
+    await userService.paymentParking(username);
+    const userStatus = 0;
+    await userService.setUserStatus(username, userStatus);
+
+    io.emit('fetch slot data', 'Broadcast success!!!');
 };
 
 const getQrCode = async (req, res) => {
@@ -91,4 +101,5 @@ module.exports = {
     checkUsername,
     getQrCode,
     getImage,
+    openExitDoor,
 };

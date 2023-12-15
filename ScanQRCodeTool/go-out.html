@@ -18,12 +18,37 @@
         <h4>SCAN RESULT</h4>
         <div id="result">Result Here</div>
     </div>
+    <div id="open-door"></div>
 </div>
 
 <script type="text/javascript">
     function sleep(ms) {
         return new Promise((resolve) => setTimeout(resolve, ms));
     }
+
+    const openEixtDoorReq = async (username) => {
+        await fetch(`http://localhost:3000/qrcode/open-exit-door`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username }),
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then((data) => {
+                if (data) {
+                    console.log('Open exit door successfully');
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    };
     async function onScanSuccess(qrCodeToken) {
         console.log('qrCodeToken: ', qrCodeToken);
 
@@ -43,8 +68,11 @@
                 return response.json();
             })
             .then((data) => {
-                if (data.imgSrc) {
-                    document.getElementById('result').innerHTML = `<img src="${data.imgSrc}"/>`;
+                if (data) {
+                    document.getElementById('result').innerHTML = `<img src="${data.imgSrc}" style="height: 300px"/>`;
+                    document.getElementById(
+                        'open-door',
+                    ).innerHTML = `<button onclick='openEixtDoorReq("${data.username}")'>Open exit door</button>`;
                 } else {
                     document.getElementById('result').innerHTML = '<span class="result">' + data.message + '</span>';
                 }

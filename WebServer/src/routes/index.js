@@ -26,6 +26,7 @@ function route(app) {
 
     app.post('/qrcode/go-in', qrCodeController.checkUsername);
     app.post('/qrcode/go-out', qrCodeController.getImage);
+    app.post('/qrcode/open-exit-door', qrCodeController.openExitDoor);
     app.get('/qrcode', qrCodeController.getQrCode);
 
     app.get('/', checkUserJWT, homeController.getHomePage);
