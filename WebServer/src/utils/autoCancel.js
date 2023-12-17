@@ -10,20 +10,33 @@ const timeoutCancel = (username, totalTime) => {
     io.emit('fetch slot data', 'Broadcast success!!!');
     const timeoutId = setTimeout(async () => {
         // call payment service
+        const price = process.env.BOOKING_PRICE
+        await userService.payment(username, price);
         const userStatus = 0;
-        await userService.paymentParking(username);
         await userService.setUserStatus(username, userStatus);
 
         io.emit('fetch slot data', 'Broadcast success!!!');
 
-        // remove timeoutInfo
-        timeoutInfoArray = timeoutInfoArray.filter((item) => item.timeoutId !== timeoutId);
+        removeTimeoutInfo(username);
 
         return;
     }, totalTime * 1000);
     timeoutInfoArray.push({ username, timeoutId });
 };
 
+const removeTimeoutInfo = (username) => {
+    let removeTimeoutId = null;
+    timeoutInfoArray = timeoutInfoArray.filter((item) => {
+        if (item.username === username) {
+            removeTimeoutId = item.timeoutId;
+            return false;
+        }
+        return true;
+    });
+    clearTimeout(removeTimeoutId);
+};
+
 module.exports = {
     timeoutCancel,
+    removeTimeoutInfo,
 };

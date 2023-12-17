@@ -23,7 +23,8 @@ const checkUsername = async (req, res) => {
     if (username) {
         // Payment if booking
         if (userInfo.userStatus === 1) {
-            await userService.paymentBooking(username);
+            const price = process.env.BOOKING_PRICE;
+            await userService.payment(username, price);
             const userStatus = 2;
             await userService.setUserStatus(username, userStatus);
 
@@ -78,7 +79,8 @@ const getImage = async (req, res) => {
 const openExitDoor = async (req, res) => {
     const username = req.body.username;
     // Payment parking
-    await userService.paymentParking(username);
+    const price = process.env.PARKING_PRICE;
+    await userService.payment(username, price);
     const userStatus = 0;
     await userService.setUserStatus(username, userStatus);
 

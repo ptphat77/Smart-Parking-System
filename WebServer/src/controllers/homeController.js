@@ -19,12 +19,15 @@ const getHomePage = async (req, res) => {
 const bookingRequest = async (req, res) => {
     try {
         const username = req.session.info.username;
-        const userStatus = 1;
-        console.log('setStartTime: ', userService.paymentParking);
+
         const data = await userService.setStartTime(username);
-        const totalTime = Math.round(data.balance / 0.5);
+        // Autocancel
+        const price = process.env.BOOKING_PRICE;
+        const totalTime = Math.round(data.balance / price);
         await autoCancel.timeoutCancel(username, totalTime);
-        // await userService.setUserStatus(username, userStatus);
+        // setUserStatus
+        const userStatus = 1;
+        await userService.setUserStatus(username, userStatus);
 
         io.emit('fetch slot data', 'Broadcast success!!!');
         req.session.info.userStatus = userStatus;
@@ -49,9 +52,11 @@ const bookingStatus = async (req, res) => {
 const cancelBooking = async (req, res) => {
     try {
         const username = req.session.info.username;
+        const price = process.env.BOOKING_PRICE;
+        await userService.payment(username, price);
         const userStatus = 0;
-        await userService.paymentBooking(username);
         await userService.setUserStatus(username, userStatus);
+        autoCancel.removeTimeoutInfo(username);
 
         io.emit('fetch slot data', 'Broadcast success!!!');
         req.session.info.userStatus = userStatus;
