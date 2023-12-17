@@ -1,4 +1,6 @@
 const userService = require('../services/userService');
+
+const autoCancel = require('../utils/autoCancel');
 import { io } from '../server';
 
 const getHomePage = async (req, res) => {
@@ -18,8 +20,11 @@ const bookingRequest = async (req, res) => {
     try {
         const username = req.session.info.username;
         const userStatus = 1;
-        await userService.setUserStatus(username, userStatus);
-        await userService.setStartTime(username);
+        console.log('setStartTime: ', userService.paymentParking);
+        const data = await userService.setStartTime(username);
+        const totalTime = Math.round(data.balance / 0.5);
+        await autoCancel.timeoutCancel(username, totalTime);
+        // await userService.setUserStatus(username, userStatus);
 
         io.emit('fetch slot data', 'Broadcast success!!!');
         req.session.info.userStatus = userStatus;
