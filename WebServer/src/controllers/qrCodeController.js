@@ -28,7 +28,7 @@ const checkUsername = async (req, res) => {
             const userStatus = 2;
             await userService.setUserStatus(username, userStatus);
 
-            io.emit('fetch slot data', 'Broadcast success!!!');
+            io.emit('fetch slot status', 'Fetch slot status success!!!');
         }
 
         // Snapshot
@@ -84,7 +84,7 @@ const openExitDoor = async (req, res) => {
     const userStatus = 0;
     await userService.setUserStatus(username, userStatus);
 
-    io.emit('fetch slot data', 'Broadcast success!!!');
+    io.emit('fetch slot status', 'Fetch slot status success!!!');
 
     // Open gate
     // openGate();

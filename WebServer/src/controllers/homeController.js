@@ -29,7 +29,7 @@ const bookingRequest = async (req, res) => {
         const userStatus = 1;
         await userService.setUserStatus(username, userStatus);
 
-        io.emit('fetch slot data', 'Broadcast success!!!');
+        io.emit('fetch slot status', 'Fetch slot status success!!!');
         req.session.info.userStatus = userStatus;
 
         return res.status(200).json('success');
@@ -58,7 +58,7 @@ const cancelBooking = async (req, res) => {
         await userService.setUserStatus(username, userStatus);
         autoCancel.removeTimeoutInfo(username);
 
-        io.emit('fetch slot data', 'Broadcast success!!!');
+        io.emit('fetch slot status', 'Fetch slot status success!!!');
         req.session.info.userStatus = userStatus;
 
         return res.status(200).json('success');

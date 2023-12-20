@@ -237,10 +237,18 @@
                 // Socket.io
                 const socket = io();
 
-                socket.on('fetch slot data', async (message) => {
+                socket.on('fetch slot status', async (message) => {
                     console.log(message);
                     await fetchSlotStatus();
                 });
+
+                socket.on(`fetch user status: username(<%= sessionInfo.username %>)`, async (message) => {
+                    console.log(message);
+                    await bookingStatus();
+
+                    await getbalance();
+                });
+
             });
         </script>
     </body>

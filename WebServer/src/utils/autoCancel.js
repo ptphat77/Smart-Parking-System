@@ -7,7 +7,7 @@ let timeoutInfoArray = [];
 const timeoutCancel = (username, totalTime) => {
     // payment every 1 minute
     console.log('totalTime: ', totalTime);
-    io.emit('fetch slot data', 'Broadcast success!!!');
+    io.emit('fetch slot status', 'Fetch slot status success!!!');
     const timeoutId = setTimeout(async () => {
         // call payment service
         const price = process.env.BOOKING_PRICE
@@ -15,7 +15,7 @@ const timeoutCancel = (username, totalTime) => {
         const userStatus = 0;
         await userService.setUserStatus(username, userStatus);
 
-        io.emit('fetch slot data', 'Broadcast success!!!');
+        io.emit('fetch slot status', 'Fetch slot status success!!!');
 
         removeTimeoutInfo(username);
 
@@ -33,6 +33,7 @@ const removeTimeoutInfo = (username) => {
         }
         return true;
     });
+    io.emit(`fetch user status: username(${username})`, 'Fetch user status success!!!');
     clearTimeout(removeTimeoutId);
 };
 
