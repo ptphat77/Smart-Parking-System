@@ -1,6 +1,6 @@
 const userService = require('../services/userService');
 
-const autoCancel = require('../utils/autoCancel');
+const autoCancelUtil = require('../utils/autoCancelUtil');
 import { io } from '../server';
 
 const getHomePage = async (req, res) => {
@@ -24,7 +24,7 @@ const bookingRequest = async (req, res) => {
         // Autocancel
         const price = process.env.BOOKING_PRICE;
         const totalTime = Math.round(data.balance / price);
-        await autoCancel.timeoutCancel(username, totalTime);
+        await autoCancelUtil.timeoutCancel(username, totalTime);
         // setUserStatus
         const userStatus = 1;
         await userService.setUserStatus(username, userStatus);
@@ -56,7 +56,7 @@ const cancelBooking = async (req, res) => {
         await userService.payment(username, price);
         const userStatus = 0;
         await userService.setUserStatus(username, userStatus);
-        autoCancel.removeTimeoutInfo(username);
+        autoCancelUtil.removeTimeoutInfo(username);
 
         io.emit('fetch slot status', 'Fetch slot status success!!!');
         req.session.info.userStatus = userStatus;
