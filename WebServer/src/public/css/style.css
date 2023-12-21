@@ -5,7 +5,8 @@ body {
 
 .background {
     background-image: linear-gradient(90deg, #508bfc, pink);
-    height: 100%;
+    /* height: 100%; */
+    padding-bottom: 32px;
 }
 
 .cursor {

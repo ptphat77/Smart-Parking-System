@@ -1,24 +1,73 @@
-<script src="html5-qrcode.min.js"></script>
 <style>
-    .result {
-        background-color: green;
-        color: #fff;
+    #result {
+        /* background-color: green; */
+        /* color: #fff;
         padding: 20px;
+        font-size: 24px; */
     }
+
     .row {
         display: flex;
+        flex-direction: row-reverse;
+        flex-direction: column-reverse;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+
+    }
+
+    #reader {
+        background-color: #fff;
+        box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
+            rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px,
+            rgba(0, 0, 0, 0.09) 0px -3px 5px;
+        border-radius: 10px;
+    }
+
+    #reader button {
+        color: #fff;
+        padding: 8px;
+        background-color: #508bfc;
+        border-radius: 8px;
+        outline: none;
+        border: none;
+        cursor: pointer;
+    }
+
+    #reader a {
+        color: #508bfc;
+
+    }
+
+    body {
+        background-image: linear-gradient(90deg, #508bfc, pink);
+        position: relative;
+        font-family: sans-serif;
+    }
+
+    .conatiner-camera {
+        position: absolute;
+        top: 30%;
+        left: 50%;
+        transform: translate(-50%, -50%);
     }
 </style>
 
-<div class="row">
-    <div class="col">
-        <div style="width: 500px" id="reader"></div>
-    </div>
-    <div class="col" style="padding: 30px">
-        <h4>SCAN RESULT</h4>
-        <div id="result">Result Here</div>
+<div class="conatiner-camera">
+    <div class="row">
+        <div class="col">
+            <div style="width: 600px" id="reader"></div>
+        </div>
+        <div class="col" style="padding: 30px">
+            <h2>SCAN RESULT</h2>
+            <div id="result">Result Here</div>
+        </div>
+        <div class="div" style="background-color: #fff;">
+            <script class="qrcodescan" src="html5-qrcode.min.js"></script>
+        </div>
     </div>
 </div>
+
 
 <script type="text/javascript">
     function sleep(ms) {

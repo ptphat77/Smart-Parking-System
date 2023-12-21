@@ -1,26 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <%- include('layouts/head.ejs') %>
+
+<head>
+    <%- include('layouts/head.ejs') %>
 
         <!-- Leaflet.js cdn -->
-        <link
-            rel="stylesheet"
-            href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-            integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-            crossorigin=""
-        />
-        <script
-            src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-            crossorigin=""
-        ></script>
-    </head>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+            integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+</head>
 
-    <body>
-        <div class="background">
-            <!-- Navbar -->
-            <!-- <div class="container home">
+<body>
+    <div class="background">
+        <!-- Navbar -->
+        <!-- <div class="container home">
                 <nav class="navbar navbar-light">
                     <div class="container-fluid">
                         <a class="navbar-brand d-flex align-items-center" href="#">
@@ -40,260 +34,255 @@
 
                         <a href="/logout" style="color: #fff">Logout</a>
                     </div>
-                </nav>
-            </div> -->
+                </nav> -->
+        <nav class="navbar navbar-expand-lg">
+            <a class="navbar-brand" href="#">
+                <img src="https://www.uit.edu.vn/sites/vi/files/uploads/images/thumbs/202111/phong.png" alt=""
+                    width="40" height="40" class="d-inline-block align-text-top rounded-circle" />
+                <span class="ms-3">Smart Parking System</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-            <nav class="navbar navbar-expand-lg">
-                <a class="navbar-brand" href="#">
-                    <img
-                        src="https://www.uit.edu.vn/sites/vi/files/uploads/images/thumbs/202111/phong.png"
-                        alt=""
-                        width="40"
-                        height="40"
-                        class="d-inline-block align-text-top rounded-circle"
-                    />
-                    <span class="ms-3">Smart Parking System</span>
-                </a>
-                <button
-                    class="navbar-toggler"
-                    type="button"
-                    data-toggle="collapse"
-                    data-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation"
-                >
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+            <a class="nav-link nav-item welcome" href="#" style="font-size: 24px;"><span>Welcome <%=
+                        sessionInfo.username %>!</span></a>
 
-                <a class="nav-link nav-item welcome" href="#"><span>Welcome <%= sessionInfo.username %>!</span></a>
+            <a class="nav-link nav-item balance" href="#"><span class="balance"></span></a>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent"
+                style="display: flex; justify-content: space-between;">
+                <ul class="navbar-nav">
 
-                <a class="nav-link nav-item balance" href="#"><span class="balance"></span></a>
-                <div
-                    class="collapse navbar-collapse"
-                    id="navbarSupportedContent"
-                    style="display: flex; justify-content: space-between"
-                >
-                    <ul class="navbar-nav">
-                        <li class="nav-item dropdown">
-                            <div class="sec-center">
-                                <input class="dropdown" type="checkbox" id="dropdown" name="dropdown" />
-                                <label class="for-dropdown" for="dropdown"
-                                    ><i class="fa-solid fa-bars" style="font-size: 24px"></i
-                                ></label>
-                                <div class="section-dropdown">
-                                    <a href="#" onclick="bookingRequest();">Book<i class="uil uil-arrow-right"></i></a>
-                                    <a href="#" onclick="cancelBooking();" style=""
-                                        >Cancel Booking<i class="uil uil-arrow-right cancel"></i
-                                    ></a>
-                                    <a
-                                        href="#"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#exampleModal"
-                                        onclick="getQRCode();"
-                                        >QR code <i class="uil uil-arrow-right"></i
-                                    ></a>
-                                    <a href="#" onclick="loadMap(slotListFE);"
-                                        >Load map <i class="uil uil-arrow-right"></i
-                                    ></a>
-                                    <a href="/logout">Logout<i class="uil uil-arrow-right"></i></a>
-                                </div>
+                    <li class="nav-item dropdown">
+
+                        <div class="sec-center">
+                            <input class="dropdown" type="checkbox" id="dropdown" name="dropdown" />
+                            <label class="for-dropdown" for="dropdown"><i class="fa-solid fa-bars"
+                                    style="font-size: 24px;"></i></label>
+                            <div class="section-dropdown">
+                                <a href="#" onclick="bookingRequest();">Book<i class="uil uil-arrow-right"></i></a>
+                                <a href="#" onclick="cancelBooking();" style="">Cancel Booking<i
+                                        class="uil uil-arrow-right cancel"></i></a>
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                                    onclick="getQRCode();">QR code <i class="uil uil-arrow-right"></i></a>
+                                <a href="#" onclick="loadMap(slotListFE);">Load map <i
+                                        class="uil uil-arrow-right"></i></a>
+                                <a href="/logout">Logout<i class="uil uil-arrow-right"></i></a>
                             </div>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-
-            <!-- Slot status -->
-            <div class="container mb-4 mt-3">
-                <h2>Slot status</h2>
-                <h3>Availability: <span class="slot__availability"></span></h3>
-                <div class="slot__container">
-                    <div class="row"></div>
-                </div>
+                        </div>
+                    </li>
+                </ul>
             </div>
+        </nav>
 
-            <!-- Your action -->
-            <!-- <div class="container">
+        <!-- Slot status -->
+        <div class="container mb-4 mt-4">
+            <h2>Slot status</h2>
+            <h3>Availability: <span class="slot__availability"></span></h3>
+            <div class="slot__container">
+                <div class="row"></div>
+            </div>
+        </div>
+
+        <!-- Your action -->
+        <div class="container">
             <h2>Your action</h2>
             <div class="booking__container">
-
+                <!-- Booking button -->
                 <button type="button" class="btn btn-success booking-request__btn" onclick="bookingRequest();" hidden>
                     Book
                 </button>
                 <button type="button" class="btn btn-danger cancel-booking__btn" onclick="cancelBooking();" hidden>
                     Cancel Booking
                 </button>
-
+                <!-- Button trigger modal QR Code-->
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
                     onclick="getQRCode();">
                     QR Code
                 </button>
                 <button type="button" class="btn btn-primary" onclick="loadMap(slotListFE);">Load Map</button>
             </div>
-        </div> -->
+        </div>
 
-            <!-- <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <!-- <div class="alert alert-warning alert-dismissible fade show" role="alert">
                 <strong>Holy guacamole!</strong> You should check in on some of those fields below.
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div> -->
 
-            <div class="container mt-3 mb-3">
-                <div id="map"></div>
-            </div>
 
-            <!-- Modal -->
-            <div
-                class="modal fade"
-                id="exampleModal"
-                tabindex="-1"
-                aria-labelledby="exampleModalLabel"
-                aria-hidden="true"
-            >
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Your QR Code</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body qr__container"></div>
+        <div class="container mt-3 mb-4">
+            <div id="map"></div>
+        </div>
+
+
+        <!-- QR Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Your QR Code</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
+                    <div class="modal-body qr__container"></div>
                 </div>
             </div>
         </div>
 
-        <script src="map.js"></script>
+        <!-- Loadmap Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Your QR Code</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body qr__container"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        <script src="/socket.io/socket.io.js"></script>
-        <script>
-            let slotListFE = [];
-            const renderSlotStatus = (slotStatus) => {
-                const slotAvailability = document.querySelector('.slot__availability');
-                const slotContainer = document.querySelector('.slot__container .row');
+    <script src="map.js"></script>
 
-                // Show slot status
-                var htmls = slotStatus.slotList.map(function (slot) {
-                    let BgColor = '';
-                    if (!slot.isBlank) {
-                        BgColor = 'bg-danger';
-                    } else {
-                        BgColor = 'bg-success';
-                    }
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        let slotListFE = [];
+        const renderSlotStatus = (slotStatus) => {
+            const slotAvailability = document.querySelector('.slot__availability');
+            const slotContainer = document.querySelector('.slot__container .row');
 
-                    return `<div class="slot__item col-4 ${BgColor}" dataId="${slot.slotNumber}">
+            // Show slot status
+            var htmls = slotStatus.slotList.map(function (slot) {
+                let BgColor = '';
+                if (!slot.isBlank) {
+                    BgColor = 'bg-danger';
+                } else {
+                    BgColor = 'bg-success';
+                }
+
+                return `<div class="slot__item col-4 ${BgColor}" dataId="${slot.slotNumber}">
 
                                 <b>Slot ${slot.slotNumber}</b>
                             </div>`;
-                });
-
-                slotContainer.innerHTML = htmls.join('');
-
-                const slotBtns = document.querySelectorAll('.slot__container .slot__item');
-
-                // Show slot availability
-                slotAvailability.innerHTML = `${slotStatus.slotList.length - slotStatus.unavailable}/${
-                    slotStatus.slotList.length
-                }`;
-            };
-
-            const fetchSlotStatus = async () => {
-                await fetch(`<%= url %>:<%= port %>/iot/`)
-                    .then((resoponse) => {
-                        return resoponse.json();
-                    })
-                    .then((slotStatus) => {
-                        renderSlotStatus(slotStatus);
-                        slotListFE = slotStatus.slotList;
-                        // loadMap(slotStatus.slotList);
-                    });
-            };
-
-            const getQRCode = async () => {
-                await fetch(`<%= url %>:<%= port %>/qrcode/`)
-                    .then((resoponse) => {
-                        return resoponse.json();
-                    })
-                    .then(async (qrString) => {
-                        console.log('qrString:', qrString);
-                        const qrContainer = document.querySelector('.qr__container');
-                        if (qrString) {
-                            qrContainer.innerHTML = `<img src="${qrString}"/>`;
-                        } else {
-                            qrContainer.innerHTML = `<h2>You are in parking</h2>`;
-                        }
-                    });
-            };
-
-            const bookingRequest = async () => {
-                await fetch(`<%= url %>:<%= port %>/booking/create`)
-                    .then((resoponse) => {
-                        return resoponse.json();
-                    })
-                    .then((data) => {});
-
-                await bookingStatus();
-            };
-
-            const cancelBooking = async () => {
-                await fetch(`<%= url %>:<%= port %>/booking/cancel`)
-                    .then((resoponse) => {
-                        return resoponse.json();
-                    })
-                    .then((data) => {});
-
-                await bookingStatus();
-                await getbalance();
-            };
-
-            const bookingStatus = async () => {
-                await fetch(`<%= url %>:<%= port %>/booking/status`)
-                    .then((resoponse) => {
-                        return resoponse.json();
-                    })
-                    .then(async (userStatus) => {
-                        switch (userStatus) {
-                            case 0:
-                                document.querySelector('.booking-request__btn').hidden = false;
-                                document.querySelector('.cancel-booking__btn').hidden = true;
-                                break;
-                            case 1:
-                                document.querySelector('.cancel-booking__btn').hidden = false;
-                                document.querySelector('.booking-request__btn').hidden = true;
-                                break;
-                            case 2:
-                                document.querySelector('.cancel-booking__btn').hidden = false;
-                                document.querySelector('.booking-request__btn').hidden = true;
-                                document.querySelector('.cancel-booking__btn').disabled = true;
-                        }
-                    });
-            };
-
-            const getbalance = async () => {
-                await fetch(`<%= url %>:<%= port %>/balance`)
-                    .then((resoponse) => {
-                        return resoponse.json();
-                    })
-                    .then(async (balance) => {
-                        document.querySelector('.balance').innerHTML = `Balance: ${balance}`;
-                    });
-            };
-
-            window.addEventListener('load', async () => {
-                // ####### Slot status #######
-                await fetchSlotStatus();
-
-                await bookingStatus();
-
-                await getbalance();
-
-                // Socket.io
-                const socket = io();
-
-                socket.on('fetch slot data', async (message) => {
-                    console.log(message);
-                    await fetchSlotStatus();
-                });
             });
-        </script>
-    </body>
+
+            slotContainer.innerHTML = htmls.join('');
+
+            const slotBtns = document.querySelectorAll('.slot__container .slot__item');
+
+            // Show slot availability
+            slotAvailability.innerHTML = `${slotStatus.slotList.length - slotStatus.unavailable}/${slotStatus.slotList.length
+                }`;
+        };
+
+        const fetchSlotStatus = async () => {
+            await fetch(`<%= url %>:<%= port %>/iot/`)
+                .then((resoponse) => {
+                    return resoponse.json();
+                })
+                .then((slotStatus) => {
+                    renderSlotStatus(slotStatus);
+                    slotListFE = slotStatus.slotList;
+                    // loadMap(slotStatus.slotList);
+                });
+        };
+
+        const getQRCode = async () => {
+            await fetch(`<%= url %>:<%= port %>/qrcode/`)
+                .then((resoponse) => {
+                    return resoponse.json();
+                })
+                .then(async (qrString) => {
+                    console.log('qrString:', qrString);
+                    const qrContainer = document.querySelector('.qr__container');
+                    if (qrString) {
+                        qrContainer.innerHTML = `<img src="${qrString}"/>`;
+                    } else {
+                        qrContainer.innerHTML = `<h2>You are in parking</h2>`;
+                    }
+                });
+        };
+
+        const bookingRequest = async () => {
+            await fetch(`<%= url %>:<%= port %>/booking/create`)
+                .then((resoponse) => {
+                    return resoponse.json();
+                })
+                .then((data) => { });
+
+            await bookingStatus();
+        };
+
+        const cancelBooking = async () => {
+            await fetch(`<%= url %>:<%= port %>/booking/cancel`)
+                .then((resoponse) => {
+                    return resoponse.json();
+                })
+                .then((data) => { });
+
+            await bookingStatus();
+            await getbalance();
+        };
+
+        const bookingStatus = async () => {
+            await fetch(`<%= url %>:<%= port %>/booking/status`)
+                .then((resoponse) => {
+                    return resoponse.json();
+                })
+                .then(async (userStatus) => {
+                    switch (userStatus) {
+                        case 0:
+                            document.querySelector('.booking-request__btn').hidden = false;
+                            document.querySelector('.cancel-booking__btn').hidden = true;
+                            break;
+                        case 1:
+                            document.querySelector('.cancel-booking__btn').hidden = false;
+                            document.querySelector('.booking-request__btn').hidden = true;
+                            break;
+                        case 2:
+                            document.querySelector('.cancel-booking__btn').hidden = false;
+                            document.querySelector('.booking-request__btn').hidden = true;
+                            document.querySelector('.cancel-booking__btn').disabled = true;
+                    }
+                });
+        };
+
+        const getbalance = async () => {
+            await fetch(`<%= url %>:<%= port %>/balance`)
+                .then((resoponse) => {
+                    return resoponse.json();
+                })
+                .then(async (balance) => {
+                    document.querySelector('.balance').innerHTML = `Balance: ${balance}`;
+                });
+        };
+
+        window.addEventListener('load', async () => {
+            // ####### Slot status #######
+            await fetchSlotStatus();
+
+            await bookingStatus();
+
+            await getbalance();
+
+            // Socket.io
+            const socket = io();
+
+            socket.on('fetch slot status', async (message) => {
+                console.log(message);
+                await fetchSlotStatus();
+            });
+
+            socket.on(`fetch user status: username(<%= sessionInfo.username %>)`, async (message) => {
+                console.log(message);
+                await bookingStatus();
+
+                await getbalance();
+            });
+
+        });
+    </script>
+</body>
+
 </html>
