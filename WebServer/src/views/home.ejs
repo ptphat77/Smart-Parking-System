@@ -93,9 +93,12 @@
                                         onclick="getQRCode();"
                                         >QR code <i class="uil uil-arrow-right"></i
                                     ></a>
-                                    <a href="#" onclick="loadMap(slotListFE);"
+                                    <!-- <a href="#" onclick="loadMap(slotListFE);"
                                         >Load map <i class="uil uil-arrow-right"></i
-                                    ></a>
+                                    ></a> -->
+                                    <button type="button" class="btn btn-primary" onclick="loadMap(slotListFE);">
+                                        Load Map
+                                    </button>
                                     <a href="/logout">Logout<i class="uil uil-arrow-right"></i></a>
                                 </div>
                             </div>
@@ -114,24 +117,33 @@
             </div>
 
             <!-- Your action -->
-            <!-- <div class="container">
-            <h2>Your action</h2>
-            <div class="booking__container">
+            <div class="container">
+                <h2>Your action</h2>
+                <div class="booking__container">
+                    <button
+                        type="button"
+                        class="btn btn-success booking-request__btn"
+                        onclick="bookingRequest();"
+                        hidden
+                    >
+                        Book
+                    </button>
+                    <button type="button" class="btn btn-danger cancel-booking__btn" onclick="cancelBooking();" hidden>
+                        Cancel Booking
+                    </button>
 
-                <button type="button" class="btn btn-success booking-request__btn" onclick="bookingRequest();" hidden>
-                    Book
-                </button>
-                <button type="button" class="btn btn-danger cancel-booking__btn" onclick="cancelBooking();" hidden>
-                    Cancel Booking
-                </button>
-
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
-                    onclick="getQRCode();">
-                    QR Code
-                </button>
-                <button type="button" class="btn btn-primary" onclick="loadMap(slotListFE);">Load Map</button>
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#exampleModal"
+                        onclick="getQRCode();"
+                    >
+                        QR Code
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="loadMap(slotListFE);">Load Map</button>
+                </div>
             </div>
-        </div> -->
 
             <!-- <div class="alert alert-warning alert-dismissible fade show" role="alert">
                 <strong>Holy guacamole!</strong> You should check in on some of those fields below.
@@ -289,9 +301,16 @@
                 // Socket.io
                 const socket = io();
 
-                socket.on('fetch slot data', async (message) => {
+                socket.on('fetch slot status', async (message) => {
                     console.log(message);
                     await fetchSlotStatus();
+                });
+
+                socket.on(`fetch user status: username(<%= sessionInfo.username %>)`, async (message) => {
+                    console.log(message);
+                    await bookingStatus();
+
+                    await getbalance();
                 });
             });
         </script>
