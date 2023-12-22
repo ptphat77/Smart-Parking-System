@@ -16,8 +16,6 @@
     position: absolute;
 }
 
-.navbar-brand {
-}
 #navbarSupportedContent {
     right: 12px;
 }
@@ -89,7 +87,7 @@
     cursor: pointer;
     color: #102770;
     box-shadow: 0 12px 35px 0 rgba(255, 235, 167, 0.15);
-    right: 32px;
+    right: -20%;
 }
 .dark-light:checked ~ .sec-center .for-dropdown {
     background-color: #102770;
@@ -137,7 +135,7 @@
     pointer-events: none;
     transform: translateY(20px);
     transition: all 200ms linear;
-    right: -31px;
+    right: -20%;
 }
 .dark-light:checked ~ .sec-center .section-dropdown {
     background-color: #fff;
@@ -332,4 +330,17 @@
 
 #map {
     height: 90vh;
+}
+
+@media only screen and (max-width: 750px) {
+    .navbar-brand > span {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 1100px) {
+    .welcome_balance {
+        display: flex;
+        flex-direction: column;
+    }
 }

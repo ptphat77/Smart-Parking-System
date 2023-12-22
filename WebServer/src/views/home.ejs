@@ -36,20 +36,18 @@
                     </div>
                 </nav> -->
         <nav class="navbar navbar-expand-lg">
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand " href="#">
                 <img src="https://www.uit.edu.vn/sites/vi/files/uploads/images/thumbs/202111/phong.png" alt=""
                     width="40" height="40" class="d-inline-block align-text-top rounded-circle" />
                 <span class="ms-3">Smart Parking System</span>
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
             </button>
 
-            <a class="nav-link nav-item welcome" href="#" style="font-size: 24px;"><span>Welcome <%=
-                        sessionInfo.username %>!</span></a>
+            <span class="welcome nav-link nav-item" style="font-size: 24px;">Welcome <%=sessionInfo.username %>
+                    !</span>
 
-            <a class="nav-link nav-item balance" href="#"><span class="balance"></span></a>
             <div class="collapse navbar-collapse" id="navbarSupportedContent"
                 style="display: flex; justify-content: space-between;">
                 <ul class="navbar-nav">
@@ -61,9 +59,10 @@
                             <label class="for-dropdown" for="dropdown"><i class="fa-solid fa-bars"
                                     style="font-size: 24px;"></i></label>
                             <div class="section-dropdown">
-                                <a href="#" onclick="bookingRequest();">Book<i class="uil uil-arrow-right"></i></a>
-                                <a href="#" onclick="cancelBooking();" style="">Cancel Booking<i
-                                        class="uil uil-arrow-right cancel"></i></a>
+                                <a class="btn-success booking-request__btn" href="#" onclick="bookingRequest();">Book<i
+                                        class="uil uil-arrow-right"></i></a>
+                                <a class="btn-danger cancel-booking__btn" href="#" onclick="cancelBooking();"
+                                    style="">Cancel Booking<i class="uil uil-arrow-right cancel"></i></a>
                                 <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal"
                                     onclick="getQRCode();">QR code <i class="uil uil-arrow-right"></i></a>
                                 <a href="#" onclick="loadMap(slotListFE);">Load map <i
@@ -78,7 +77,10 @@
 
         <!-- Slot status -->
         <div class="container mb-4 mt-4">
+            <span class="balance"></span>
+
             <h2>Slot status</h2>
+
             <h3>Availability: <span class="slot__availability"></span></h3>
             <div class="slot__container">
                 <div class="row"></div>
@@ -86,24 +88,24 @@
         </div>
 
         <!-- Your action -->
-        <div class="container">
+        <!-- <div class="container">
             <h2>Your action</h2>
             <div class="booking__container">
-                <!-- Booking button -->
-                <button type="button" class="btn btn-success booking-request__btn" onclick="bookingRequest();" hidden>
+
+                <button type="button" class="btn btn-success booking-request__btn" onclick="bookingRequest(); " hidden>
                     Book
                 </button>
                 <button type="button" class="btn btn-danger cancel-booking__btn" onclick="cancelBooking();" hidden>
                     Cancel Booking
                 </button>
-                <!-- Button trigger modal QR Code-->
+
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
                     onclick="getQRCode();">
                     QR Code
                 </button>
                 <button type="button" class="btn btn-primary" onclick="loadMap(slotListFE);">Load Map</button>
             </div>
-        </div>
+        </div> -->
 
         <!-- <div class="alert alert-warning alert-dismissible fade show" role="alert">
                 <strong>Holy guacamole!</strong> You should check in on some of those fields below.
